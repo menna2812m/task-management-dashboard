@@ -1,0 +1,73 @@
+@let currentTask = task();
+
+<article
+  class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"
+>
+  <div class="flex flex-col justify-between gap-4 sm:flex-row">
+    <div class="min-w-0">
+      <div class="mb-3 flex flex-wrap gap-2">
+        <span
+          class="rounded-full px-3 py-1 text-xs font-medium"
+          [class]="statusClasses[currentTask.status]"
+        >
+          {{ statusLabels[currentTask.status] }}
+        </span>
+
+        <span
+          class="rounded-full px-3 py-1 text-xs font-medium capitalize"
+          [class]="priorityClasses[currentTask.priority]"
+        >
+          {{ currentTask.priority }}
+        </span>
+
+        @if (isOverdue()) {
+          <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
+            Overdue
+          </span>
+        }
+      </div>
+
+      <h2 class="truncate text-lg font-semibold text-slate-900">
+        {{ currentTask.title }}
+      </h2>
+
+      <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">
+        {{ currentTask.description }}
+      </p>
+    </div>
+
+    <div class="shrink-0 text-sm text-slate-500">
+      Due {{ currentTask.dueDate | date: 'mediumDate' }}
+    </div>
+  </div>
+
+  <footer
+    class="mt-5 flex flex-col justify-between gap-4 border-t border-slate-100 pt-4 sm:flex-row sm:items-center"
+  >
+    <div class="flex items-center gap-3">
+      <span
+        class="flex size-9 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700"
+        aria-hidden="true"
+      >
+        {{ currentTask.assignee.avatar }}
+      </span>
+
+      <div>
+        <p class="text-sm font-medium text-slate-800">
+          {{ currentTask.assignee.name }}
+        </p>
+        <p class="text-xs text-slate-500">
+          {{ currentTask.assignee.email }}
+        </p>
+      </div>
+    </div>
+
+    <ul class="flex flex-wrap gap-2" aria-label="Task tags">
+      @for (tag of currentTask.tags; track tag) {
+        <li class="rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-600">
+          {{ tag }}
+        </li>
+      }
+    </ul>
+  </footer>
+</article>

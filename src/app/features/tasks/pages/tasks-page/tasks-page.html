@@ -16,13 +16,11 @@
   (clearFilters)="taskStore.clearFilters()"
 />
 
-<div class="mt-6 space-y-2">
+<div class="mt-6 grid gap-4">
   @for (task of taskStore.filteredTasks(); track task.id) {
-    <div class="rounded-lg bg-white p-4 shadow-sm">
-      {{ task.title }}
-    </div>
+    <app-task-card [task]="task" />
   } @empty {
-    <p class="rounded-lg bg-white p-8 text-center text-slate-500">
+    <p class="rounded-xl bg-white p-8 text-center text-slate-500">
       No tasks match the selected filters.
     </p>
   }
