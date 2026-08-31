@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { TaskApi } from '../../data-access/task-api';
+import { TaskStore } from '../../data-access/task-store';
 @Component({
   selector: 'app-tasks-page',
   imports: [],
@@ -7,4 +8,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './tasks-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TasksPage {}
+export class TasksPage {
+  protected readonly taskApi = inject(TaskApi);
+  protected readonly taskStore = inject(TaskStore);
+}

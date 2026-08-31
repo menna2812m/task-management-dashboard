@@ -1,1 +1,8 @@
-<p>tasks-page works!</p>
+@if (taskStore.isLoading()) {
+  <p>Loading tasks...</p>
+} @else if (taskStore.error()) {
+  <button type="button" (click)="taskStore.reload()">Try again</button>
+} @else {
+  <h1 class="text-2xl font-semibold">Tasks</h1>
+  <p>{{ taskStore.filteredTasks().length }} tasks loaded</p>
+}
