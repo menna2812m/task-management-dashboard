@@ -1,8 +1,29 @@
-@if (taskStore.isLoading()) {
-  <p>Loading tasks...</p>
-} @else if (taskStore.error()) {
-  <button type="button" (click)="taskStore.reload()">Try again</button>
-} @else {
-  <h1 class="text-2xl font-semibold">Tasks</h1>
-  <p>{{ taskStore.filteredTasks().length }} tasks loaded</p>
-}
+<header class="mb-6">
+  <h1 class="text-3xl font-semibold text-slate-900">Tasks</h1>
+  <p class="mt-1 text-slate-600">{{ taskStore.filteredTasks().length }} tasks found</p>
+</header>
+
+<app-task-filters
+  [assignees]="taskStore.assignees()"
+  [searchTerm]="taskStore.searchTerm()"
+  [status]="taskStore.statusFilter()"
+  [priority]="taskStore.priorityFilter()"
+  [assigneeId]="taskStore.assigneeFilter()"
+  (searchTermChange)="taskStore.setSearchTerm($event)"
+  (statusChange)="taskStore.setStatusFilter($event)"
+  (priorityChange)="taskStore.setPriorityFilter($event)"
+  (assigneeChange)="taskStore.setAssigneeFilter($event)"
+  (clearFilters)="taskStore.clearFilters()"
+/>
+
+<div class="mt-6 space-y-2">
+  @for (task of taskStore.filteredTasks(); track task.id) {
+    <div class="rounded-lg bg-white p-4 shadow-sm">
+      {{ task.title }}
+    </div>
+  } @empty {
+    <p class="rounded-lg bg-white p-8 text-center text-slate-500">
+      No tasks match the selected filters.
+    </p>
+  }
+</div>
