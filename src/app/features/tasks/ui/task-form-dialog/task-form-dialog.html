@@ -1,0 +1,97 @@
+<h2 mat-dialog-title>
+  {{ data.task ? 'Edit task' : 'Create task' }}
+</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content class="grid gap-2 sm:min-w-xl">
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" />
+
+      @if (form.controls.title.touched && form.controls.title.invalid) {
+        <mat-error>Enter a title between 3 and 100 characters.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="4"></textarea>
+
+      @if (form.controls.description.touched && form.controls.description.invalid) {
+        <mat-error>Description is required.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="todo">To do</mat-option>
+          <mat-option value="in_progress">In progress</mat-option>
+          <mat-option value="done">Done</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Priority</mat-label>
+        <mat-select formControlName="priority">
+          <mat-option value="low">Low</mat-option>
+          <mat-option value="medium">Medium</mat-option>
+          <mat-option value="high">High</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <mat-form-field appearance="outline">
+        <mat-label>Due date</mat-label>
+        <input matInput type="date" formControlName="dueDate" />
+        <mat-error>Due date is required.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Assignee</mat-label>
+        <mat-select formControlName="assigneeId">
+          @for (assignee of data.assignees; track assignee.id) {
+            <mat-option [value]="assignee.id">
+              {{ assignee.name }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-error>Assignee is required.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <fieldset formArrayName="tags" class="rounded-lg border border-slate-200 p-4">
+      <legend class="px-2 font-medium text-slate-700">Tags</legend>
+
+      @for (tagControl of tags.controls; track tagControl; let index = $index) {
+        <div class="flex items-start gap-2">
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-label>Tag {{ index + 1 }}</mat-label>
+            <input matInput [formControlName]="index" />
+            <mat-error>Tag cannot be empty.</mat-error>
+          </mat-form-field>
+
+          <button
+            mat-button
+            type="button"
+            [disabled]="tags.length === 1"
+            (click)="removeTag(index)"
+          >
+            Remove
+          </button>
+        </div>
+      }
+
+      <button mat-stroked-button type="button" (click)="addTag()">Add tag</button>
+    </fieldset>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancel</button>
+    <button mat-flat-button type="submit">
+      {{ data.task ? 'Save changes' : 'Create task' }}
+    </button>
+  </mat-dialog-actions>
+</form>

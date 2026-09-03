@@ -1,0 +1,53 @@
+<section
+  data-testid="activity-feed"
+  class="flex h-full max-h-[22rem] flex-col rounded-xl border border-grey-88 bg-white p-4"
+  aria-labelledby="activity-feed-title"
+>
+  <h2
+    id="activity-feed-title"
+    class="border-b-2 border-grey-88 px-1 pb-1 text-[11px] font-bold tracking-wide text-grey-13 uppercase"
+  >
+    Recent activity
+  </h2>
+
+  @if (loading() && !activities().length) {
+    <div class="mt-3 flex flex-col gap-3" aria-busy="true" aria-label="Loading activity">
+      @for (placeholder of [1, 2, 3]; track placeholder) {
+        <div class="h-10 animate-pulse rounded-lg bg-slate-100"></div>
+      }
+    </div>
+  } @else if (!activities().length) {
+    <p
+      class="mt-3 rounded-lg border border-dashed border-slate-200 px-3 py-8 text-center text-xs text-slate-400"
+    >
+      No activity yet. Changes to tasks will show up here.
+    </p>
+  } @else {
+    <ol
+      data-testid="activity-list"
+      class="mt-1 min-h-0 flex-1 divide-y divide-grey-88 overflow-y-auto pr-1"
+      tabindex="0"
+      aria-label="Recent activity entries"
+    >
+      @for (activity of activities(); track activity.id) {
+        <li class="flex gap-3 py-3">
+          <span
+            class="grid size-7 shrink-0 place-items-center rounded-full bg-brand-600 text-[10px] font-semibold text-white"
+            aria-hidden="true"
+          >
+            {{ activity.actor.avatar }}
+          </span>
+          <div class="min-w-0">
+            <p class="text-xs leading-5 text-grey-13">
+              <span class="font-medium">{{ activity.actor.name }}</span>
+              {{ verbs[activity.type] }} "{{ activity.taskTitle }}"
+            </p>
+            <time class="text-[11px] text-slate-500" [attr.datetime]="activity.timestamp">
+              {{ age(activity.timestamp) }}
+            </time>
+          </div>
+        </li>
+      }
+    </ol>
+  }
+</section>

@@ -1,0 +1,35 @@
+.task-card {
+  border-color: var(--color-grey-88);
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    transform 120ms ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px -4px rgb(15 23 42 / 0.12);
+  }
+}
+
+.task-card--draggable {
+  cursor: grab;
+
+  &:hover {
+    border-color: var(--color-brand-300);
+    box-shadow: 0 8px 18px -8px rgb(15 23 42 / 0.24);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+.task-card--overdue {
+  border-color: var(--color-red-200);
+  border-left: 4px solid var(--color-red-500);
+  background-color: var(--color-red-50);
+}

@@ -6,6 +6,44 @@
 @use '@angular/material' as mat;
 @use 'tailwindcss';
 
+// `static` emits every theme variable, so component stylesheets can rely on
+// `var(--color-*)` even when no utility class happens to reference that shade.
+@theme static {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  // Brand blue. 600 is the main colour from the design (#1976D2); the rest of the
+  // scale follows the same Material Blue ramp so tints and hovers stay in family.
+  --color-brand-50: #e3f2fd;
+  --color-brand-100: #bbdefb;
+  --color-brand-200: #90caf9;
+  --color-brand-300: #64b5f6;
+  --color-brand-400: #42a5f5;
+  --color-brand-500: #2196f3;
+  --color-brand-600: #1976d2;
+  --color-brand-700: #1565c0;
+  --color-brand-800: #0d47a1;
+
+  // Hover overlays from the design: 5% black on neutral surfaces; primary surfaces
+  // hover to brand-700 (#1565C0).
+  --color-black-5: #0000000d;
+
+  // Dividers and card borders (Figma token color-grey-88) and primary text (color-grey-13).
+  --color-grey-88: #e0e0e0;
+  --color-grey-13: #212121;
+
+  // Trend colours on the statistics cards.
+  --color-trend-positive: #388e3c;
+  --color-trend-negative: #d32f2f;
+
+  // Low priority pill (Figma tokens color-grey-94 / color-green-39).
+  --color-priority-low-bg: #fff3e0;
+  --color-priority-low: #388e3c;
+
+  // Secondary text colour from the design replaces Tailwind's default slate-500,
+  // so `text-slate-500` and `var(--color-slate-500)` both resolve to it.
+  --color-slate-500: #757575;
+}
+
 html {
   @include mat.theme(
     (
@@ -13,34 +51,60 @@ html {
         primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,
       ),
-      typography: Roboto,
+      typography: Inter,
       density: 0,
     )
   );
-}
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
-  margin: 0;
+  // Align Material's primary with the brand colour so dialog buttons match the shell.
+  --mat-sys-primary: var(--color-brand-600);
+  --mat-sys-on-primary: #fff;
 }
 
 html,
 body {
   height: 100%;
 }
+
 body {
+  color-scheme: light;
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background-color: var(--color-slate-100);
+  color: var(--color-slate-900);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+// Shared controls used by the shell and the dashboard. Kept here because they
+// need Tailwind's `@apply`, which is only available in the sheet that imports it.
+@layer components {
+  .btn-primary {
+    @apply inline-flex h-8 items-center justify-center gap-1.5 rounded-md bg-brand-600 px-3 text-xs font-medium text-white transition-colors hover:bg-brand-700 focus-visible:ring-2 focus-visible:ring-brand-300 focus-visible:outline-none disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex h-8 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 transition-colors hover:bg-black-5 focus-visible:ring-2 focus-visible:ring-brand-300 focus-visible:outline-none;
+  }
+
+  .pill {
+    @apply inline-flex items-center rounded px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase;
+  }
+
+  // The design uses emoji as content glyphs (sidebar, stat cards, due lines).
+  .emoji {
+    @apply inline-block shrink-0 text-sm leading-none;
+    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+    font-style: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

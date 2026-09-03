@@ -1,1 +1,35 @@
-<p>tasks-page works!</p>
+<header class="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+  <div>
+    <h1 class="text-3xl font-semibold text-slate-900">Tasks</h1>
+    <p class="mt-1 text-slate-600">{{ taskStore.filteredTasks().length }} tasks found</p>
+  </div>
+
+  <button mat-flat-button type="button" (click)="taskDialog.openCreate()">Create task</button>
+</header>
+<app-task-filters
+  [assignees]="taskStore.assignees()"
+  [searchTerm]="taskStore.searchTerm()"
+  [status]="taskStore.statusFilter()"
+  [priority]="taskStore.priorityFilter()"
+  [assigneeId]="taskStore.assigneeFilter()"
+  (searchTermChange)="taskStore.setSearchTerm($event)"
+  (statusChange)="taskStore.setStatusFilter($event)"
+  (priorityChange)="taskStore.setPriorityFilter($event)"
+  (assigneeChange)="taskStore.setAssigneeFilter($event)"
+  (clearFilters)="taskStore.clearFilters()"
+/>
+
+<div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+  @for (task of taskStore.filteredTasks(); track task.id) {
+    <app-task-card
+      [task]="task"
+      [showStatus]="true"
+      (edit)="taskDialog.openEdit($event)"
+      (delete)="taskDialog.confirmDelete($event)"
+    />
+  } @empty {
+    <p class="rounded-xl bg-white p-8 text-center text-slate-500">
+      No tasks match the selected filters.
+    </p>
+  }
+</div>
