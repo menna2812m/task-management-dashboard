@@ -28,7 +28,15 @@ describe('TaskDialogService', () => {
   async function loadTasks(tasks: Task[]): Promise<void> {
     TestBed.tick();
     httpTesting.expectOne({ method: 'GET', url: tasksUrl }).flush(tasks);
+    httpTesting.expectOne({ method: 'GET', url: `${environment.apiUrl}/users` }).flush([]);
     await settle();
+  }
+
+  /** Activity logging is incidental here; answer whatever the store has sent so far. */
+  function flushActivities(): void {
+    httpTesting
+      .match((request) => request.url === `${environment.apiUrl}/activities`)
+      .forEach((request) => request.flush(request.request.method === 'GET' ? [] : {}));
   }
 
   /**
@@ -36,7 +44,9 @@ describe('TaskDialogService', () => {
    * stability signal does not cover. Wait for Material to see no open dialogs, then settle.
    */
   async function settle(): Promise<void> {
+    flushActivities();
     await firstValueFrom(TestBed.inject(MatDialog).afterAllClosed);
+    flushActivities();
     await TestBed.inject(ApplicationRef).whenStable();
   }
 

@@ -69,7 +69,7 @@ export class TaskDialogService {
     }
 
     return this.run(
-      () => this.taskStore.deleteTask(task.id),
+      () => this.taskStore.deleteTask(task),
       'Task deleted',
       'Task could not be deleted. Try again.',
     );
