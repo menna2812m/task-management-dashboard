@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { STATISTIC_FIXTURES } from '../../testing/statistic.fixtures';
 import { environment } from '../../../../../environments/environment';
 import { TaskStore } from '../../../tasks/data-access/task-store';
+import { createActivity } from '../../../tasks/testing/activity.fixtures';
 import {
   createTask,
   isoDateFromToday,
@@ -69,6 +70,37 @@ describe('DashboardPage', () => {
     expect(text('[data-testid="stat-total"]')).not.toContain('156');
     expect(text('[data-testid="stat-total"]')).toContain('+12 this week');
     expect(text('[data-testid="stat-overdue"]')).toContain('+3 today');
+  });
+
+  it('shows the most recent activity beside the board', async () => {
+    TestBed.inject(HttpTestingController)
+      .expectOne(`${environment.apiUrl}/activities`)
+      .flush([
+        createActivity({
+          type: 'completed',
+          taskTitle: 'Fix login',
+          timestamp: new Date().toISOString(),
+        }),
+      ]);
+    await settle();
+
+    const feed = element.querySelector('[data-testid="activity-feed"]');
+    expect(feed?.textContent).toContain('Recent activity');
+    expect(feed?.textContent).toContain('John Doe completed "Fix login"');
+  });
+
+  it('charts the task distribution by status and by priority', () => {
+    const charts = Array.from(element.querySelectorAll('app-distribution-chart'));
+    const breakdown = (chart: Element) =>
+      Array.from(chart.querySelectorAll('li')).map((item) =>
+        item.textContent?.replace(/\s+/g, ' ').trim(),
+      );
+
+    expect(charts.length).toBe(2);
+    expect(charts[0].textContent).toContain('Tasks by status');
+    expect(breakdown(charts[0])).toEqual(['To do 2', 'In progress 1', 'Done 1']);
+    expect(charts[1].textContent).toContain('Tasks by priority');
+    expect(breakdown(charts[1])).toEqual(['High 0', 'Medium 4', 'Low 0']);
   });
 
   it('still renders the four cards when the statistics endpoint fails', async () => {

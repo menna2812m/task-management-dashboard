@@ -6,11 +6,14 @@ import {
   TaskStatusFilter,
   TaskStore,
 } from '../../../tasks/data-access/task-store';
-import { TaskStatus } from '../../../tasks/models/task.models';
+import { TaskPriority, TaskStatus } from '../../../tasks/models/task.models';
+import { ActivityApi } from '../../../tasks/data-access/activity-api';
 import { TaskCard } from '../../../tasks/ui/task-card/task-card';
 import { TaskDialogService } from '../../../tasks/ui/task-form-dialog/task-dialog.service';
 import { DEFAULT_STATISTICS, StatisticsApi } from '../../data-access/statistics-api';
 import { Statistic } from '../../models/statistic.models';
+import { ActivityFeed } from '../../ui/activity-feed/activity-feed';
+import { ChartSlice, DistributionChart } from '../../ui/distribution-chart/distribution-chart';
 import { StatCard } from '../../ui/stat-card/stat-card';
 
 interface StatusTab {
@@ -37,7 +40,7 @@ const STATISTIC_SLOTS: Record<string, { slug: string; stat: keyof TaskStats }> =
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [TaskCard, StatCard, Icon],
+  imports: [TaskCard, StatCard, ActivityFeed, DistributionChart, Icon],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +49,7 @@ export class DashboardPage {
   protected readonly taskStore = inject(TaskStore);
   protected readonly taskDialog = inject(TaskDialogService);
   private readonly statisticsApi = inject(StatisticsApi);
+  protected readonly activityApi = inject(ActivityApi);
 
   /** Cards from the backend, or the built-in set while loading or when the request failed. */
   protected readonly statistics = computed<readonly Statistic[]>(() => {
@@ -54,6 +58,31 @@ export class DashboardPage {
       : [];
 
     return loaded.length ? loaded : DEFAULT_STATISTICS;
+  });
+
+  /** Distribution of every task by status, for the doughnut chart. */
+  protected readonly statusSlices = computed<ChartSlice[]>(() => {
+    const tasks = this.taskStore.tasks();
+    const count = (status: TaskStatus) => tasks.filter((task) => task.status === status).length;
+
+    return [
+      { label: 'To do', value: count('todo'), color: '#64B5F6' },
+      { label: 'In progress', value: count('in_progress'), color: '#FF6F00' },
+      { label: 'Done', value: count('done'), color: '#388E3C' },
+    ];
+  });
+
+  /** Distribution of every task by priority, matching the pill colours. */
+  protected readonly prioritySlices = computed<ChartSlice[]>(() => {
+    const tasks = this.taskStore.tasks();
+    const count = (priority: TaskPriority) =>
+      tasks.filter((task) => task.priority === priority).length;
+
+    return [
+      { label: 'High', value: count('high'), color: '#D32F2F' },
+      { label: 'Medium', value: count('medium'), color: '#FF6F00' },
+      { label: 'Low', value: count('low'), color: '#388E3C' },
+    ];
   });
 
   protected readonly statusTabs: readonly StatusTab[] = [

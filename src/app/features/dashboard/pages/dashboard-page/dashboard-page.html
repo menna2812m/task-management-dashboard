@@ -10,6 +10,12 @@
   }
 </section>
 
+<section aria-label="Insights" class="mt-5 grid gap-5 lg:grid-cols-3">
+  <app-distribution-chart title="Tasks by status" [slices]="statusSlices()" />
+  <app-distribution-chart title="Tasks by priority" [slices]="prioritySlices()" />
+  <app-activity-feed [activities]="activityApi.recent()" [loading]="activityApi.isLoading()" />
+</section>
+
 <section
   aria-label="Board filters"
   class="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2"
