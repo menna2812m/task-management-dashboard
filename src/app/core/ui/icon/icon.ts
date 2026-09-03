@@ -7,6 +7,8 @@ interface IconDefinition {
   viewBox?: string;
   /** Filled glyphs paint with `currentColor` instead of stroking. */
   filled?: boolean;
+  /** Optional fixed fill for an exported design glyph. */
+  color?: string;
 }
 
 /**
@@ -27,7 +29,8 @@ const ICONS = {
   warning: {
     viewBox: '0 0 24 20',
     filled: true,
-    d: 'M0 19.6365L11.5568 0.0001L23.1136 19.6365H0ZM11.5568 17.4376C11.9943 17.4376 12.3665 17.2842 12.6733 16.9774C12.9858 16.6649 13.142 16.2899 13.142 15.8524C13.142 15.4149 12.9858 15.0427 12.6733 14.7359C12.3665 14.4234 11.9943 14.2672 11.5568 14.2672C11.1193 14.2672 10.7443 14.4234 10.4318 14.7359C10.125 15.0427 9.97157 15.4149 9.97157 15.8524C9.97157 16.2899 10.125 16.6649 10.4318 16.9774C10.7443 17.2842 11.1193 17.4376 11.5568 17.4376ZM10.517 12.341H12.5966L12.75 6.54557H10.3636L10.517 12.341Z',
+    color: '#757575',
+    d: 'M-1.66297e-5 19.6364L11.5568 -1.23978e-5L23.1136 19.6364H-1.66297e-5ZM11.5568 17.4375C11.9943 17.4375 12.3665 17.2841 12.6733 16.9773C12.9858 16.6648 13.142 16.2898 13.142 15.8523C13.142 15.4148 12.9858 15.0426 12.6733 14.7358C12.3665 14.4233 11.9943 14.267 11.5568 14.267C11.1193 14.267 10.7443 14.4233 10.4318 14.7358C10.125 15.0426 9.97157 15.4148 9.97157 15.8523C9.97157 16.2898 10.125 16.6648 10.4318 16.9773C10.7443 17.2841 11.1193 17.4375 11.5568 17.4375ZM10.517 12.3409H12.5966L12.75 6.54544H10.3636L10.517 12.3409Z',
   },
 } satisfies Record<string, IconDefinition>;
 
@@ -39,7 +42,7 @@ export type IconName = keyof typeof ICONS;
     @let icon = definition();
     <svg
       [attr.viewBox]="icon.viewBox ?? '0 0 24 24'"
-      [attr.fill]="icon.filled ? 'currentColor' : 'none'"
+      [attr.fill]="icon.filled ? (icon.color ?? 'currentColor') : 'none'"
       [attr.stroke]="icon.filled ? 'none' : 'currentColor'"
       stroke-width="2"
       stroke-linecap="round"

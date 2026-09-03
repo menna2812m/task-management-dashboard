@@ -75,7 +75,7 @@
       </button>
     </div>
   } @else {
-    <div class="grid gap-5 lg:grid-cols-3">
+    <div cdkDropListGroup class="grid gap-5 lg:grid-cols-3">
       @for (column of columns; track column.status) {
         @let tasks = taskStore.tasksByStatus()[column.status];
 
@@ -108,11 +108,19 @@
               <div class="h-32 animate-pulse rounded-xl bg-slate-100"></div>
             </div>
           } @else {
-            <ul class="flex flex-col gap-3">
+            <ul
+              cdkDropList
+              class="task-list flex flex-1 flex-col gap-3"
+              [cdkDropListData]="column.status"
+              [cdkDropListDisabled]="taskStore.isSaving()"
+              [attr.aria-label]="column.label + ' tasks. Drag a task here to change its status.'"
+              (cdkDropListDropped)="onTaskDrop($event)"
+            >
               @for (task of tasks; track task.id) {
-                <li>
+                <li cdkDrag [cdkDragData]="task" [cdkDragDisabled]="taskStore.isSaving()">
                   <app-task-card
                     [task]="task"
+                    [draggable]="true"
                     (edit)="taskDialog.openEdit($event)"
                     (delete)="taskDialog.confirmDelete($event)"
                   />

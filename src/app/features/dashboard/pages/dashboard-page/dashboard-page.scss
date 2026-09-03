@@ -28,3 +28,21 @@
     color: #fff;
   }
 }
+
+.task-list {
+  min-height: 2.5rem;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 24px rgb(15 23 42 / 20%);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.35;
+}
+
+.cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder) {
+  transition: transform 160ms ease;
+}

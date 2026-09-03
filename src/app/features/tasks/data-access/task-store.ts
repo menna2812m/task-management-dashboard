@@ -173,6 +173,26 @@ export class TaskStore {
     );
   }
 
+  /**
+   * Moves a card to another board column. Reuse the normal update path so completion
+   * timestamps, activity logging and cache invalidation stay consistent with form edits.
+   */
+  moveTask(task: Task, status: TaskStatus): Promise<Task> {
+    if (task.status === status) {
+      return Promise.resolve(task);
+    }
+
+    return this.updateTask(task, {
+      title: task.title,
+      description: task.description,
+      status,
+      priority: task.priority,
+      dueDate: task.dueDate,
+      assigneeId: task.assignee.id,
+      tags: task.tags,
+    });
+  }
+
   /** Deletes a task and refreshes the list. */
   deleteTask(task: Task): Promise<void> {
     return this.mutate(

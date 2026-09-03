@@ -182,6 +182,6 @@ Fixtures live in `testing/` folders. Zoneless testing has two conventions worth 
 - Production builds expect the API at `/api`; a reverse proxy or a build-time `apiUrl` change is needed to deploy.
 - The mock `/activities` collection starts empty. Entries appear as tasks change.
 - Sub-routes for Calendar, Analytics, and Settings exist in the design but are shown as disabled navigation items.
-- Drag and drop between columns is not implemented; the CDK is installed and the store already exposes the update path.
+- Card status can be changed by dragging a card between board columns. Reordering within a column is visual only; task ordering is not persisted.
 - No CI pipeline, Docker image, or i18n yet. A GitHub Actions workflow running lint, tests, and build is the natural next step.
 - Responsive behaviour uses Tailwind breakpoints but has only been verified at desktop widths.

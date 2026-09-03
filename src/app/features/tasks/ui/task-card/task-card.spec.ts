@@ -111,6 +111,18 @@ describe('TaskCard', () => {
     expect(element.textContent).toContain('In progress');
   });
 
+  it('adds the drag affordance only when requested', async () => {
+    const element = await render(createTask());
+    const card = element.querySelector('article')!;
+
+    expect(card.classList).not.toContain('task-card--draggable');
+
+    fixture.componentRef.setInput('draggable', true);
+    await fixture.whenStable();
+
+    expect(card.classList).toContain('task-card--draggable');
+  });
+
   it('shows the due label for upcoming tasks', async () => {
     const element = await render(createTask({ dueDate: isoDateFromToday(2) }));
 

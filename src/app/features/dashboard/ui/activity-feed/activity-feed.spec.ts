@@ -41,6 +41,15 @@ describe('ActivityFeed', () => {
     expect(text(items[3])).toContain('John Doe updated "Refactor"');
   });
 
+  it('keeps activity entries in a labelled scrollable region', async () => {
+    const element = await render([createActivity()]);
+    const list = element.querySelector<HTMLOListElement>('[data-testid="activity-list"]')!;
+
+    expect(list.getAttribute('aria-label')).toBe('Recent activity entries');
+    expect(list.getAttribute('tabindex')).toBe('0');
+    expect(list.classList).toContain('overflow-y-auto');
+  });
+
   it('shows when each change happened', async () => {
     const element = await render([
       createActivity({ timestamp: new Date(Date.now() - 5 * 60_000).toISOString() }),

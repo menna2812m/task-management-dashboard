@@ -1,6 +1,6 @@
 <section
   data-testid="activity-feed"
-  class="flex h-full flex-col rounded-xl border border-grey-88 bg-white p-4"
+  class="flex h-full max-h-[22rem] flex-col rounded-xl border border-grey-88 bg-white p-4"
   aria-labelledby="activity-feed-title"
 >
   <h2
@@ -23,7 +23,12 @@
       No activity yet. Changes to tasks will show up here.
     </p>
   } @else {
-    <ol class="mt-1 divide-y divide-grey-88">
+    <ol
+      data-testid="activity-list"
+      class="mt-1 min-h-0 flex-1 divide-y divide-grey-88 overflow-y-auto pr-1"
+      tabindex="0"
+      aria-label="Recent activity entries"
+    >
       @for (activity of activities(); track activity.id) {
         <li class="flex gap-3 py-3">
           <span

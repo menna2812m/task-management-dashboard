@@ -15,6 +15,8 @@ export class TaskCard {
   readonly task = input.required<Task>();
   /** Show the status pill; off by default because board columns already convey it. */
   readonly showStatus = input(false);
+  /** Adds a visual drag affordance when the card is used on the kanban board. */
+  readonly draggable = input(false);
 
   readonly edit = output<Task>();
   readonly delete = output<Task>();

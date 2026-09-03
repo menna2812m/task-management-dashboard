@@ -138,6 +138,18 @@ describe('DashboardPage', () => {
     expect(element.querySelectorAll('[data-column="done"] app-task-card').length).toBe(1);
   });
 
+  it('configures each board column as a connected drag-and-drop target', () => {
+    const lists = element.querySelectorAll<HTMLElement>(
+      '[data-testid="board-column"] ul[cdkDropList]',
+    );
+
+    expect(lists.length).toBe(3);
+    expect(element.querySelectorAll<HTMLElement>('[data-column="todo"] li[cdkDrag]').length).toBe(
+      2,
+    );
+    expect(lists[2].getAttribute('aria-label')).toContain('Drag a task here');
+  });
+
   it('asks for confirmation when a card requests deletion', async () => {
     const card = element.querySelector('[data-column="in_progress"] app-task-card')!;
     card.querySelector<HTMLButtonElement>('button[aria-label="Task actions"]')!.click();

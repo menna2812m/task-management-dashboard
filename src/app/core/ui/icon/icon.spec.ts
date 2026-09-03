@@ -30,7 +30,7 @@ describe('Icon', () => {
     const svg = (fixture.nativeElement as HTMLElement).querySelector('svg');
 
     expect(svg?.getAttribute('viewBox')).toBe('0 0 24 20');
-    expect(svg?.getAttribute('fill')).toBe('currentColor');
+    expect(svg?.getAttribute('fill')).toBe('#757575');
     expect(svg?.getAttribute('stroke')).toBe('none');
   });
 

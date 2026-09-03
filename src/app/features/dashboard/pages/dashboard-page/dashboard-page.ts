@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Icon } from '../../../../core/ui/icon/icon';
 import {
   TaskPriorityFilter,
@@ -40,7 +42,7 @@ const STATISTIC_SLOTS: Record<string, { slug: string; stat: keyof TaskStats }> =
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [TaskCard, StatCard, ActivityFeed, DistributionChart, Icon],
+  imports: [DragDropModule, TaskCard, StatCard, ActivityFeed, DistributionChart, Icon],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,6 +52,7 @@ export class DashboardPage {
   protected readonly taskDialog = inject(TaskDialogService);
   private readonly statisticsApi = inject(StatisticsApi);
   protected readonly activityApi = inject(ActivityApi);
+  private readonly snackBar = inject(MatSnackBar);
 
   /** Cards from the backend, or the built-in set while loading or when the request failed. */
   protected readonly statistics = computed<readonly Statistic[]>(() => {
@@ -113,5 +116,19 @@ export class DashboardPage {
     this.taskStore.setPriorityFilter(
       (event.target as HTMLSelectElement).value as TaskPriorityFilter,
     );
+  }
+
+  /** Persists a cross-column card move; dropping back into the same column is a no-op. */
+  protected onTaskDrop(event: CdkDragDrop<TaskStatus>): void {
+    const task = event.item.data;
+    const status = event.container.data;
+
+    if (task.status === status) {
+      return;
+    }
+
+    void this.taskStore.moveTask(task, status).catch(() => {
+      this.snackBar.open('Task status could not be updated', 'Dismiss', { duration: 4000 });
+    });
   }
 }

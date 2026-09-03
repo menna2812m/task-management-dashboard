@@ -231,6 +231,30 @@ describe('TaskStore', () => {
       expectReload().flush([body]);
     });
 
+    it('moves a task by updating only its status through the normal update flow', async () => {
+      await loadTasks([todoTask]);
+
+      const pending = store.moveTask(todoTask, 'done');
+
+      const request = httpTesting.expectOne({ method: 'PUT', url: `${tasksUrl}/${todoTask.id}` });
+      const body = request.request.body as Task;
+      expect(body.status).toBe('done');
+      expect(body.completedAt).toBeTruthy();
+      expect(body.title).toBe(todoTask.title);
+      request.flush(body);
+
+      await pending;
+      expectReload().flush([body]);
+    });
+
+    it('does not send a request when a task is dropped back into its current column', async () => {
+      await loadTasks([todoTask]);
+
+      await expectAsync(store.moveTask(todoTask, 'todo')).toBeResolvedTo(todoTask);
+
+      httpTesting.expectNone({ method: 'PUT', url: `${tasksUrl}/${todoTask.id}` });
+    });
+
     it('clears completedAt when a done task is reopened', async () => {
       await loadTasks([doneToday]);
 
