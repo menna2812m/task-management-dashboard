@@ -114,7 +114,7 @@ export class TaskStore {
   }
 
   reload(): void {
-    this.taskApi.tasks.reload();
+    this.taskApi.refresh();
   }
 
   /** Creates a task from the form value and refreshes the list. */
@@ -157,7 +157,7 @@ export class TaskStore {
 
     try {
       const result = await request();
-      this.taskApi.tasks.reload();
+      this.taskApi.refresh();
 
       return result;
     } finally {

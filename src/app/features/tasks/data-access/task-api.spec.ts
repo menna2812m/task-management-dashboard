@@ -1,6 +1,7 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { HttpResponse, provideHttpClient } from '@angular/common/http';
+import { HttpCacheService } from '../../../core/http/http-cache.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { environment } from '../../../../environments/environment';
 import { Task } from '../models/task.models';
@@ -33,6 +34,15 @@ describe('TaskApi', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('drops the cached task list before reloading, so a manual refresh hits the backend', () => {
+    const cache = TestBed.inject(HttpCacheService);
+    cache.set(tasksUrl, new HttpResponse({ body: [], status: 200 }));
+
+    service.refresh();
+
+    expect(cache.get(tasksUrl)).toBeUndefined();
   });
 
   it('creates a task with a POST and returns the saved task', async () => {
