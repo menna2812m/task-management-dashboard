@@ -183,5 +183,5 @@ Fixtures live in `testing/` folders. Zoneless testing has two conventions worth 
 - The mock `/activities` collection starts empty. Entries appear as tasks change.
 - Sub-routes for Calendar, Analytics, and Settings exist in the design but are shown as disabled navigation items.
 - Card status can be changed by dragging a card between board columns. Reordering within a column is visual only; task ordering is not persisted.
-- No CI pipeline, Docker image, or i18n yet. A GitHub Actions workflow running lint, tests, and build is the natural next step.
+- CI runs formatting, linting, headless tests with coverage, and a production build for every push and pull request. Docker and i18n are not implemented yet.
 - Responsive behaviour uses Tailwind breakpoints but has only been verified at desktop widths.
