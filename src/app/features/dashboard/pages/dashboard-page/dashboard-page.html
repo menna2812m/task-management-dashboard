@@ -38,7 +38,7 @@
     <label class="relative">
       <span class="sr-only">Filter by priority</span>
       <select
-        class="btn-secondary appearance-none pr-8"
+        class="app-input app-input--compact pr-8"
         [value]="taskStore.priorityFilter()"
         (change)="onPriorityChange($event)"
       >
@@ -61,7 +61,7 @@
   </div>
 </section>
 
-<section aria-label="Task board" class="mt-5">
+<section data-task-results aria-label="Task board" class="mt-5">
   @if (taskStore.error()) {
     <div
       role="alert"

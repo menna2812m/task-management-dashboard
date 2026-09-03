@@ -4,7 +4,7 @@
       "id": "task-001",
       "title": "Design new homepage layout",
       "description": "Create wireframes and mockups for the new homepage redesign with modern UI elements",
-      "status": "in_progress",
+      "status": "todo",
       "priority": "high",
       "dueDate": "2026-09-05",
       "assignee": {
@@ -15,7 +15,7 @@
       },
       "tags": ["Design"],
       "createdAt": "2026-09-01T18:16:16.295Z",
-      "updatedAt": "2026-09-03T21:03:22.516Z"
+      "updatedAt": "2026-09-03T23:31:28.190Z"
     },
     {
       "id": "task-002",
@@ -507,6 +507,19 @@
       },
       "timestamp": "2026-09-03T21:19:26.250Z",
       "id": "Umun-NJ3RSo"
+    },
+    {
+      "type": "updated",
+      "taskId": "task-001",
+      "taskTitle": "Design new homepage layout",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T23:31:28.206Z",
+      "id": "y8jIgGZkCis"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

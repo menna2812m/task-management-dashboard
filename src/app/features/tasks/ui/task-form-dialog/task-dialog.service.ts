@@ -85,6 +85,7 @@ export class TaskDialogService {
     return this.dialog.open<TaskFormDialog, TaskDialogData, TaskFormValue>(TaskFormDialog, {
       width: '720px',
       maxWidth: '95vw',
+      maxHeight: 'calc(100dvh - 2rem)',
       data: {
         task,
         assignees: this.taskStore.assignees(),

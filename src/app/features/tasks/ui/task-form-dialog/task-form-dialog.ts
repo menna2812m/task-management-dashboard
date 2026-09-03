@@ -8,22 +8,12 @@ import {
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { TaskDialogData, TaskFormValue } from '../../models/task.models';
 import { noWhitespaceValidator } from '../../validators/no-whitespace.validator';
 
 @Component({
   selector: 'app-task-form-dialog',
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-  ],
+  imports: [ReactiveFormsModule, MatDialogModule, MatButtonModule],
   templateUrl: './task-form-dialog.html',
   styleUrl: './task-form-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

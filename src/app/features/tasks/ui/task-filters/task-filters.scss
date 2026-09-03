@@ -1,0 +1,24 @@
+.task-filter-panel {
+  background: linear-gradient(135deg, #fff, #f8fafc);
+}
+
+.filter-control {
+  display: grid;
+  gap: 0.5rem;
+  color: #475569;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.filter-clear {
+  min-height: 3.5rem;
+  border-radius: 0.625rem;
+  border-color: var(--color-slate-300);
+  color: var(--color-brand-600);
+  font-weight: 600;
+
+  &:hover {
+    border-color: var(--color-brand-300);
+    background-color: var(--color-brand-50);
+  }
+}
