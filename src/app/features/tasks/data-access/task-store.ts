@@ -1,6 +1,17 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { NewTask, Task, TaskFormValue, TaskPriority, TaskStatus } from '../models/task.models';
+import { CURRENT_USER } from '../../../core/auth/current-user';
+import { UsersApi } from '../../team/data-access/users-api';
+import { ActivityType, NewActivity } from '../models/activity.models';
+import {
+  Assignee,
+  NewTask,
+  Task,
+  TaskFormValue,
+  TaskPriority,
+  TaskStatus,
+} from '../models/task.models';
 import { isCompletedOn, isTaskOverdue } from '../utils/task-status.utils';
+import { ActivityApi } from './activity-api';
 import { TaskApi } from './task-api';
 
 export type TaskStatusFilter = TaskStatus | 'all';
@@ -23,6 +34,8 @@ export const TASK_STATUSES: readonly TaskStatus[] = ['todo', 'in_progress', 'don
 })
 export class TaskStore {
   private readonly taskApi = inject(TaskApi);
+  private readonly usersApi = inject(UsersApi);
+  private readonly activityApi = inject(ActivityApi);
 
   readonly searchTerm = signal('');
   readonly statusFilter = signal<TaskStatusFilter>('all');
@@ -84,7 +97,17 @@ export class TaskStore {
     };
   });
 
-  readonly assignees = computed(() => {
+  /**
+   * People a task can be assigned to: the users directory when it has loaded, otherwise the
+   * assignees already present on tasks so the form stays usable while users are unavailable.
+   */
+  readonly assignees = computed<readonly Assignee[]>(() => {
+    const users = this.usersApi.users.hasValue() ? this.usersApi.users.value() : [];
+
+    if (users.length) {
+      return users;
+    }
+
     const uniqueAssignees = new Map(this.tasks().map((task) => [task.assignee.id, task.assignee]));
 
     return [...uniqueAssignees.values()];
@@ -127,7 +150,10 @@ export class TaskStore {
       updatedAt: now,
     };
 
-    return this.mutate(() => this.taskApi.create(draft));
+    return this.mutate(
+      () => this.taskApi.create(draft),
+      (saved) => this.activityFor('created', saved),
+    );
   }
 
   /** Applies the form value to an existing task and refreshes the list. */
@@ -139,30 +165,52 @@ export class TaskStore {
       completedAt: this.completedAtFor(existing, value.status, now),
       updatedAt: now,
     };
+    const becameDone = updated.status === 'done' && existing.status !== 'done';
 
-    return this.mutate(() => this.taskApi.update(updated));
+    return this.mutate(
+      () => this.taskApi.update(updated),
+      (saved) => this.activityFor(becameDone ? 'completed' : 'updated', saved),
+    );
   }
 
   /** Deletes a task and refreshes the list. */
-  deleteTask(id: string): Promise<void> {
-    return this.mutate(() => this.taskApi.remove(id));
+  deleteTask(task: Task): Promise<void> {
+    return this.mutate(
+      () => this.taskApi.remove(task.id),
+      () => this.activityFor('deleted', task),
+    );
   }
 
   /**
-   * Runs one mutation, tracking the saving flag and reloading the list on success.
-   * Errors propagate to the caller so the UI can report them.
+   * Runs one mutation, tracking the saving flag, reloading the list and logging an activity
+   * entry on success. Errors from the mutation propagate so the UI can report them; a failed
+   * activity log is swallowed because it must never undo or block a successful change.
    */
-  private async mutate<T>(request: () => Promise<T>): Promise<T> {
+  private async mutate<T>(
+    request: () => Promise<T>,
+    activity: (result: T) => NewActivity,
+  ): Promise<T> {
     this.isSaving.set(true);
 
     try {
       const result = await request();
       this.taskApi.refresh();
+      void this.activityApi.record(activity(result)).catch(() => undefined);
 
       return result;
     } finally {
       this.isSaving.set(false);
     }
+  }
+
+  private activityFor(type: ActivityType, task: Task): NewActivity {
+    return {
+      type,
+      taskId: task.id,
+      taskTitle: task.title,
+      actor: CURRENT_USER,
+      timestamp: new Date().toISOString(),
+    };
   }
 
   /** Maps the flat form value onto task fields, resolving the assignee by id. */

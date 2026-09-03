@@ -1,0 +1,65 @@
+<header class="mb-6">
+  <h1 class="text-3xl font-semibold text-grey-13">Team</h1>
+  <p class="mt-1 text-slate-500">People who can be assigned tasks</p>
+</header>
+
+@if (usersApi.users.error()) {
+  <div
+    role="alert"
+    class="flex flex-col items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-6 py-10 text-center"
+  >
+    <p class="text-sm font-medium text-red-700">Team members could not be loaded.</p>
+    <p class="text-xs text-red-600">Check that the API is running, then try again.</p>
+    <button type="button" class="btn-secondary" (click)="usersApi.refresh()">
+      <app-icon name="refresh" [size]="14" />
+      Try again
+    </button>
+  </div>
+} @else if (usersApi.users.isLoading()) {
+  <ul class="grid gap-4 md:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label="Loading team">
+    @for (placeholder of [1, 2, 3]; track placeholder) {
+      <li class="h-28 animate-pulse rounded-xl bg-slate-200/70"></li>
+    }
+  </ul>
+} @else {
+  <ul class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    @for (member of members(); track member.user.id) {
+      <li
+        data-testid="team-member"
+        class="flex gap-4 rounded-xl border border-grey-88 bg-white p-5 shadow-sm"
+      >
+        <span
+          data-testid="avatar"
+          class="grid size-11 shrink-0 place-items-center rounded-full bg-brand-600 text-sm font-semibold text-white"
+          aria-hidden="true"
+        >
+          {{ member.user.avatar }}
+        </span>
+
+        <div class="min-w-0 flex-1">
+          <p class="truncate font-semibold text-grey-13">{{ member.user.name }}</p>
+          <p class="truncate text-xs text-slate-500">{{ member.user.email }}</p>
+
+          <dl class="mt-3 flex gap-6">
+            <div>
+              <dt class="text-xs text-slate-500">Open</dt>
+              <dd data-testid="open-count" class="text-lg font-semibold text-grey-13">
+                {{ member.open }}
+              </dd>
+            </div>
+            <div>
+              <dt class="text-xs text-slate-500">Done</dt>
+              <dd data-testid="done-count" class="text-lg font-semibold text-grey-13">
+                {{ member.done }}
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </li>
+    } @empty {
+      <li class="rounded-xl bg-white p-8 text-center text-slate-500 md:col-span-2 xl:col-span-3">
+        No team members yet.
+      </li>
+    }
+  </ul>
+}

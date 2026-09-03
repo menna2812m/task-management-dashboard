@@ -33,6 +33,7 @@ describe('MainLayout', () => {
 
     expect(hrefs).toContain('/dashboard');
     expect(hrefs).toContain('/tasks');
+    expect(hrefs).toContain('/team');
   });
 
   it('lists sections that are not built yet as disabled', () => {
@@ -40,7 +41,7 @@ describe('MainLayout', () => {
       element.querySelectorAll('nav [aria-disabled="true"] .nav-link__label'),
     ).map((item) => item.textContent?.trim());
 
-    expect(disabled).toEqual(['Calendar', 'Analytics', 'Team', 'Settings']);
+    expect(disabled).toEqual(['Calendar', 'Analytics', 'Settings']);
   });
 
   it('renders the exported logo and notification glyphs as decorative images', () => {

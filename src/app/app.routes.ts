@@ -21,6 +21,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/tasks/tasks.routes').then((routes) => routes.TASKS_ROUTES),
       },
+      {
+        path: 'team',
+        loadChildren: () =>
+          import('./features/team/team.routes').then((routes) => routes.TEAM_ROUTES),
+      },
     ],
   },
   {

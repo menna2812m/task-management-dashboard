@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TaskStore } from '../../../features/tasks/data-access/task-store';
 import { TaskDialogService } from '../../../features/tasks/ui/task-form-dialog/task-dialog.service';
+import { CURRENT_USER } from '../../auth/current-user';
 import { Icon } from '../../ui/icon/icon';
 
 interface NavItem {
@@ -28,12 +29,11 @@ export class MainLayout {
     { label: 'Tasks', emoji: '✅', route: '/tasks' },
     { label: 'Calendar', emoji: '📅' },
     { label: 'Analytics', emoji: '📈' },
-    { label: 'Team', emoji: '👥' },
+    { label: 'Team', emoji: '👥', route: '/team' },
     { label: 'Settings', emoji: '⚙️' },
   ];
 
-  // There is no authentication yet; this mirrors the signed-in user shown in the design.
-  protected readonly currentUser = { name: 'John Doe', initials: 'JD' };
+  protected readonly currentUser = CURRENT_USER;
 
   protected onSearch(event: Event): void {
     this.taskStore.setSearchTerm((event.target as HTMLInputElement).value);

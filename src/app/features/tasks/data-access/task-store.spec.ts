@@ -1,9 +1,16 @@
 import { ApplicationRef, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+  TestRequest,
+} from '@angular/common/http/testing';
 import { environment } from '../../../../environments/environment';
-import { Task } from '../models/task.models';
+import { CURRENT_USER } from '../../../core/auth/current-user';
+import { USER_FIXTURES } from '../../team/testing/user.fixtures';
+import { NewActivity } from '../models/activity.models';
+import { Assignee, Task } from '../models/task.models';
 import { createTask, isoDateFromToday, isoTimestampFromToday } from '../testing/task.fixtures';
 import { TaskStore } from './task-store';
 
@@ -25,10 +32,20 @@ describe('TaskStore', () => {
     completedAt: isoTimestampFromToday(-3),
   });
 
-  async function loadTasks(tasks: Task[]): Promise<void> {
+  const activitiesUrl = `${environment.apiUrl}/activities`;
+
+  /** Answers the task list and, unless told otherwise, empty users and activities lists. */
+  async function loadTasks(tasks: Task[], users: Assignee[] = []): Promise<void> {
     TestBed.tick();
     httpTesting.expectOne(`${environment.apiUrl}/tasks`).flush(tasks);
+    httpTesting.expectOne(`${environment.apiUrl}/users`).flush(users);
+    httpTesting.expectOne(activitiesUrl).flush([]);
     await TestBed.inject(ApplicationRef).whenStable();
+  }
+
+  /** The activity entry a mutation records once it has succeeded. */
+  function expectActivity(): TestRequest {
+    return httpTesting.expectOne({ method: 'POST', url: activitiesUrl });
   }
 
   /** The resource re-fetches inside an effect, so flush effects before expecting the GET. */
@@ -52,6 +69,11 @@ describe('TaskStore', () => {
   });
 
   afterEach(() => {
+    // Activity logging is best effort and not the subject of most specs; answer any pending
+    // entries so `verify` only reports requests a spec forgot about.
+    httpTesting
+      .match((request) => request.url === activitiesUrl)
+      .forEach((request) => request.flush({}));
     httpTesting.verify();
   });
 
@@ -95,6 +117,46 @@ describe('TaskStore', () => {
       completedToday: 1,
       inProgress: 1,
       overdue: 1,
+    });
+  });
+
+  describe('assignees', () => {
+    it('lists every user from the users endpoint, including those without tasks', async () => {
+      await loadTasks([todoTask], USER_FIXTURES);
+
+      expect(store.assignees().map((user) => user.name)).toEqual([
+        'John Doe',
+        'Sarah Smith',
+        'Mike Johnson',
+        'Emily Davis',
+      ]);
+    });
+
+    it('falls back to the assignees found on tasks while users are unavailable', async () => {
+      await loadTasks([todoTask], []);
+
+      expect(store.assignees()).toEqual([todoTask.assignee]);
+    });
+
+    it('can assign a task to a user who has no tasks yet', async () => {
+      await loadTasks([todoTask], USER_FIXTURES);
+      const emily = USER_FIXTURES[3];
+
+      const pending = store.createTask({
+        title: 'Onboarding',
+        description: 'Welcome pack',
+        status: 'todo',
+        priority: 'low',
+        dueDate: isoDateFromToday(3),
+        assigneeId: emily.id,
+        tags: ['Admin'],
+      });
+
+      const request = httpTesting.expectOne({ method: 'POST', url: `${environment.apiUrl}/tasks` });
+      expect((request.request.body as Task).assignee).toEqual(emily);
+      request.flush({ ...(request.request.body as Task), id: 'task-new' });
+      await pending;
+      expectReload().flush([]);
     });
   });
 
@@ -185,7 +247,7 @@ describe('TaskStore', () => {
     it('deletes a task and reloads', async () => {
       await loadTasks([todoTask]);
 
-      const pending = store.deleteTask(todoTask.id);
+      const pending = store.deleteTask(todoTask);
 
       httpTesting.expectOne({ method: 'DELETE', url: `${tasksUrl}/${todoTask.id}` }).flush({});
 
@@ -197,7 +259,7 @@ describe('TaskStore', () => {
       await loadTasks([todoTask]);
       expect(store.isSaving()).toBeFalse();
 
-      const pending = store.deleteTask(todoTask.id);
+      const pending = store.deleteTask(todoTask);
       expect(store.isSaving()).toBeTrue();
 
       httpTesting.expectOne({ method: 'DELETE', url: `${tasksUrl}/${todoTask.id}` }).flush({});
@@ -210,7 +272,7 @@ describe('TaskStore', () => {
     it('resets the saving state and rethrows when the API fails', async () => {
       await loadTasks([todoTask]);
 
-      const pending = store.deleteTask(todoTask.id);
+      const pending = store.deleteTask(todoTask);
       httpTesting
         .expectOne({ method: 'DELETE', url: `${tasksUrl}/${todoTask.id}` })
         .flush('boom', { status: 500, statusText: 'Server Error' });
@@ -218,6 +280,97 @@ describe('TaskStore', () => {
       await expectAsync(pending).toBeRejected();
       expect(store.isSaving()).toBeFalse();
       httpTesting.expectNone({ method: 'GET', url: tasksUrl });
+    });
+  });
+
+  describe('activity log', () => {
+    const tasksUrl = `${environment.apiUrl}/tasks`;
+    const formValue = {
+      title: 'Write release notes',
+      description: 'Summarise the changes',
+      status: 'todo' as const,
+      priority: 'high' as const,
+      dueDate: isoDateFromToday(4),
+      assigneeId: 'user-001',
+      tags: ['Docs'],
+    };
+
+    it('records a "created" entry attributed to the current user', async () => {
+      await loadTasks([todoTask]);
+
+      const pending = store.createTask(formValue);
+      const create = httpTesting.expectOne({ method: 'POST', url: tasksUrl });
+      create.flush({ ...(create.request.body as Task), id: 'task-new' });
+      await pending;
+
+      const body = expectActivity().request.body as NewActivity;
+      expect(body.type).toBe('created');
+      expect(body.taskId).toBe('task-new');
+      expect(body.taskTitle).toBe('Write release notes');
+      expect(body.actor).toEqual(CURRENT_USER);
+      expect(body.timestamp).toBeTruthy();
+      expectReload().flush([]);
+    });
+
+    it('records "completed" when an edit moves a task to done', async () => {
+      await loadTasks([todoTask]);
+
+      const pending = store.updateTask(todoTask, { ...formValue, status: 'done' });
+      const update = httpTesting.expectOne({ method: 'PUT', url: `${tasksUrl}/${todoTask.id}` });
+      update.flush(update.request.body);
+      await pending;
+
+      expect((expectActivity().request.body as NewActivity).type).toBe('completed');
+      expectReload().flush([]);
+    });
+
+    it('records "updated" for any other edit', async () => {
+      await loadTasks([todoTask]);
+
+      const pending = store.updateTask(todoTask, { ...formValue, status: 'todo' });
+      const update = httpTesting.expectOne({ method: 'PUT', url: `${tasksUrl}/${todoTask.id}` });
+      update.flush(update.request.body);
+      await pending;
+
+      expect((expectActivity().request.body as NewActivity).type).toBe('updated');
+      expectReload().flush([]);
+    });
+
+    it('records "deleted" with the title of the removed task', async () => {
+      await loadTasks([todoTask]);
+
+      const pending = store.deleteTask(todoTask);
+      httpTesting.expectOne({ method: 'DELETE', url: `${tasksUrl}/${todoTask.id}` }).flush({});
+      await pending;
+
+      const body = expectActivity().request.body as NewActivity;
+      expect(body.type).toBe('deleted');
+      expect(body.taskTitle).toBe(todoTask.title);
+      expectReload().flush([]);
+    });
+
+    it('does not fail the mutation when logging fails', async () => {
+      await loadTasks([todoTask]);
+
+      const pending = store.deleteTask(todoTask);
+      httpTesting.expectOne({ method: 'DELETE', url: `${tasksUrl}/${todoTask.id}` }).flush({});
+
+      await expectAsync(pending).toBeResolved();
+      expectActivity().flush('down', { status: 500, statusText: 'Error' });
+      await new Promise((resolve) => setTimeout(resolve));
+      expectReload().flush([]);
+    });
+
+    it('does not record anything when the mutation itself fails', async () => {
+      await loadTasks([todoTask]);
+
+      const pending = store.deleteTask(todoTask);
+      httpTesting
+        .expectOne({ method: 'DELETE', url: `${tasksUrl}/${todoTask.id}` })
+        .flush('down', { status: 500, statusText: 'Error' });
+
+      await expectAsync(pending).toBeRejected();
+      httpTesting.expectNone({ method: 'POST', url: activitiesUrl });
     });
   });
 
