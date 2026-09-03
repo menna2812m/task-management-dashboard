@@ -1,19 +1,37 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { MatMenuModule } from '@angular/material/menu';
+import { Icon } from '../../../../core/ui/icon/icon';
 import { Task, TaskPriority, TaskStatus } from '../../models/task.models';
-import { isTaskOverdue } from '../../utils/task-status.utils';
+import { DueKind, getDueInfo } from '../../utils/task-status.utils';
 
 @Component({
   selector: 'app-task-card',
-  imports: [DatePipe],
+  imports: [MatMenuModule, Icon],
   templateUrl: './task-card.html',
   styleUrl: './task-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskCard {
   readonly task = input.required<Task>();
+  /** Show the status pill; off by default because board columns already convey it. */
+  readonly showStatus = input(false);
 
-  protected readonly isOverdue = computed(() => isTaskOverdue(this.task()));
+  readonly edit = output<Task>();
+
+  protected readonly dueInfo = computed(() => getDueInfo(this.task()));
+  protected readonly firstName = computed(() => this.task().assignee.name.split(' ')[0]);
+
+  protected readonly priorityLabels: Record<TaskPriority, string> = {
+    low: 'Low',
+    medium: 'Medium',
+    high: 'High',
+  };
+
+  protected readonly priorityClasses: Record<TaskPriority, string> = {
+    low: 'bg-emerald-50 text-emerald-700',
+    medium: 'bg-amber-50 text-amber-700',
+    high: 'bg-red-50 text-red-600',
+  };
 
   protected readonly statusLabels: Record<TaskStatus, string> = {
     todo: 'To do',
@@ -21,15 +39,16 @@ export class TaskCard {
     done: 'Done',
   };
 
-  protected readonly priorityClasses: Record<TaskPriority, string> = {
-    low: 'bg-emerald-50 text-emerald-700',
-    medium: 'bg-amber-50 text-amber-700',
-    high: 'bg-red-50 text-red-700',
+  /** Emoji glyphs, matching the design; hidden from assistive tech since the label carries meaning. */
+  protected readonly dueEmoji: Record<DueKind, string> = {
+    overdue: '⚠️',
+    upcoming: '📅',
+    completed: '✅',
   };
 
-  protected readonly statusClasses: Record<TaskStatus, string> = {
-    todo: 'bg-slate-100 text-slate-700',
-    in_progress: 'bg-blue-50 text-blue-700',
-    done: 'bg-emerald-50 text-emerald-700',
+  protected readonly dueClasses: Record<DueKind, string> = {
+    overdue: 'text-red-600',
+    upcoming: 'text-slate-500',
+    completed: 'text-emerald-600',
   };
 }

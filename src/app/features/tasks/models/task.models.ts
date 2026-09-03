@@ -30,3 +30,17 @@ export interface TasksResponse {
     lastUpdated: string;
   };
 }
+export interface TaskFormValue {
+  title: string;
+  description: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  dueDate: string;
+  assigneeId: string;
+  tags: string[];
+}
+
+export interface TaskDialogData {
+  task?: Task;
+  assignees: readonly Assignee[];
+}

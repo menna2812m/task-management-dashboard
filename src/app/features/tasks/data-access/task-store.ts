@@ -1,9 +1,22 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { TaskPriority, TaskStatus } from '../models/task.models';
+import { Task, TaskPriority, TaskStatus } from '../models/task.models';
+import { isCompletedOn, isTaskOverdue } from '../utils/task-status.utils';
 import { TaskApi } from './task-api';
 
 export type TaskStatusFilter = TaskStatus | 'all';
 export type TaskPriorityFilter = TaskPriority | 'all';
+
+export type TasksByStatus = Record<TaskStatus, Task[]>;
+
+export interface TaskStats {
+  total: number;
+  completed: number;
+  completedToday: number;
+  inProgress: number;
+  overdue: number;
+}
+
+export const TASK_STATUSES: readonly TaskStatus[] = ['todo', 'in_progress', 'done'];
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +54,31 @@ export class TaskStore {
 
       return matchesSearch && matchesStatus && matchesPriority && matchesAssignee;
     });
+  });
+
+  /** Filtered tasks grouped into one column per status, in the order tasks arrive. */
+  readonly tasksByStatus = computed<TasksByStatus>(() => {
+    const columns: TasksByStatus = { todo: [], in_progress: [], done: [] };
+
+    for (const task of this.filteredTasks()) {
+      columns[task.status].push(task);
+    }
+
+    return columns;
+  });
+
+  /** Summary numbers over every task, unaffected by the active filters. */
+  readonly stats = computed<TaskStats>(() => {
+    const today = new Date();
+    const tasks = this.tasks();
+
+    return {
+      total: tasks.length,
+      completed: tasks.filter((task) => task.status === 'done').length,
+      completedToday: tasks.filter((task) => isCompletedOn(task, today)).length,
+      inProgress: tasks.filter((task) => task.status === 'in_progress').length,
+      overdue: tasks.filter((task) => isTaskOverdue(task, today)).length,
+    };
   });
 
   readonly assignees = computed(() => {
