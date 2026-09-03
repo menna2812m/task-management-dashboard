@@ -4,7 +4,7 @@
       "id": "task-001",
       "title": "Design new homepage layout",
       "description": "Create wireframes and mockups for the new homepage redesign with modern UI elements",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "dueDate": "2026-09-05",
       "assignee": {
@@ -15,13 +15,13 @@
       },
       "tags": ["Design"],
       "createdAt": "2026-09-01T18:16:16.295Z",
-      "updatedAt": "2026-09-03T18:16:16.295Z"
+      "updatedAt": "2026-09-03T21:03:22.516Z"
     },
     {
       "id": "task-002",
       "title": "Update documentation",
       "description": "Review and update API documentation for v2.0 release",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "medium",
       "dueDate": "2026-09-08",
       "assignee": {
@@ -32,13 +32,13 @@
       },
       "tags": ["Documentation"],
       "createdAt": "2026-08-31T18:16:16.295Z",
-      "updatedAt": "2026-09-02T18:16:16.295Z"
+      "updatedAt": "2026-09-03T21:03:32.331Z"
     },
     {
       "id": "task-003",
       "title": "Organize team meeting",
       "description": "Schedule and prepare agenda for quarterly planning session",
-      "status": "todo",
+      "status": "done",
       "priority": "low",
       "dueDate": "2026-09-10",
       "assignee": {
@@ -49,7 +49,8 @@
       },
       "tags": ["Admin"],
       "createdAt": "2026-08-30T18:16:16.295Z",
-      "updatedAt": "2026-09-02T18:16:16.295Z"
+      "updatedAt": "2026-09-03T21:19:21.704Z",
+      "completedAt": "2026-09-03T21:19:21.704Z"
     },
     {
       "id": "task-015",
@@ -73,7 +74,7 @@
       "id": "task-016",
       "title": "Review client feedback",
       "description": "Analyze customer feedback from user testing sessions",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "medium",
       "dueDate": "2026-08-31",
       "isOverdue": true,
@@ -85,7 +86,7 @@
       },
       "tags": ["Research"],
       "createdAt": "2026-08-19T18:16:16.295Z",
-      "updatedAt": "2026-09-02T18:16:16.295Z"
+      "updatedAt": "2026-09-03T21:03:36.967Z"
     },
     {
       "id": "task-004",
@@ -102,23 +103,6 @@
       },
       "tags": ["Frontend"],
       "createdAt": "2026-08-29T18:16:16.295Z",
-      "updatedAt": "2026-09-03T18:16:16.295Z"
-    },
-    {
-      "id": "task-005",
-      "title": "Implement user authentication",
-      "description": "Add JWT-based authentication system with refresh tokens",
-      "status": "in_progress",
-      "priority": "high",
-      "dueDate": "2026-09-06",
-      "assignee": {
-        "id": "user-001",
-        "name": "John Doe",
-        "avatar": "JD",
-        "email": "john.doe@company.com"
-      },
-      "tags": ["Backend"],
-      "createdAt": "2026-08-27T18:16:16.295Z",
       "updatedAt": "2026-09-03T18:16:16.295Z"
     },
     {
@@ -159,7 +143,7 @@
       "id": "task-008",
       "title": "Add dark mode support",
       "description": "Implement theme toggle with dark/light mode preferences",
-      "status": "in_progress",
+      "status": "done",
       "priority": "medium",
       "dueDate": "2026-09-09",
       "assignee": {
@@ -170,13 +154,14 @@
       },
       "tags": ["Frontend"],
       "createdAt": "2026-08-25T18:16:16.295Z",
-      "updatedAt": "2026-09-02T18:16:16.295Z"
+      "updatedAt": "2026-09-03T21:19:25.279Z",
+      "completedAt": "2026-09-03T21:19:25.279Z"
     },
     {
       "id": "task-017",
       "title": "Update payment gateway integration",
       "description": "Migrate to new payment provider API and update billing logic",
-      "status": "in_progress",
+      "status": "done",
       "priority": "high",
       "dueDate": "2026-09-02",
       "isOverdue": true,
@@ -188,7 +173,8 @@
       },
       "tags": ["Backend", "Critical"],
       "createdAt": "2026-08-20T18:16:16.295Z",
-      "updatedAt": "2026-09-03T18:16:16.295Z"
+      "updatedAt": "2026-09-03T21:19:23.179Z",
+      "completedAt": "2026-09-03T21:19:23.179Z"
     },
     {
       "id": "task-009",
@@ -197,7 +183,6 @@
       "status": "done",
       "priority": "high",
       "dueDate": "2026-09-02",
-      "completedAt": "2026-09-03T18:16:16.295Z",
       "assignee": {
         "id": "user-003",
         "name": "Mike Johnson",
@@ -206,16 +191,16 @@
       },
       "tags": ["Bug Fix"],
       "createdAt": "2026-09-01T18:16:16.295Z",
-      "updatedAt": "2026-09-03T18:16:16.295Z"
+      "updatedAt": "2026-09-03T21:19:24.139Z",
+      "completedAt": "2026-09-03T21:19:24.139Z"
     },
     {
       "id": "task-010",
       "title": "Setup CI/CD pipeline",
       "description": "Configured GitHub Actions for automated testing and deployment",
-      "status": "done",
+      "status": "in_progress",
       "priority": "medium",
       "dueDate": "2026-09-01",
-      "completedAt": "2026-09-02T18:16:16.295Z",
       "assignee": {
         "id": "user-001",
         "name": "John Doe",
@@ -224,7 +209,7 @@
       },
       "tags": ["DevOps"],
       "createdAt": "2026-08-25T18:16:16.295Z",
-      "updatedAt": "2026-09-02T18:16:16.295Z"
+      "updatedAt": "2026-09-03T21:19:20.117Z"
     },
     {
       "id": "task-011",
@@ -233,7 +218,6 @@
       "status": "done",
       "priority": "high",
       "dueDate": "2026-08-31",
-      "completedAt": "2026-09-01T18:16:16.295Z",
       "assignee": {
         "id": "user-002",
         "name": "Sarah Smith",
@@ -242,7 +226,8 @@
       },
       "tags": ["Testing"],
       "createdAt": "2026-08-24T18:16:16.295Z",
-      "updatedAt": "2026-09-01T18:16:16.295Z"
+      "updatedAt": "2026-09-03T21:19:26.240Z",
+      "completedAt": "2026-09-03T21:19:26.240Z"
     },
     {
       "id": "task-012",
@@ -266,10 +251,9 @@
       "id": "task-013",
       "title": "Security audit",
       "description": "Conduct comprehensive security review of the application",
-      "status": "done",
+      "status": "todo",
       "priority": "high",
       "dueDate": "2026-08-29",
-      "completedAt": "2026-08-30T18:16:16.295Z",
       "assignee": {
         "id": "user-001",
         "name": "John Doe",
@@ -278,7 +262,7 @@
       },
       "tags": ["Security"],
       "createdAt": "2026-08-21T18:16:16.295Z",
-      "updatedAt": "2026-08-30T18:16:16.295Z"
+      "updatedAt": "2026-09-03T21:19:16.334Z"
     },
     {
       "id": "task-014",
@@ -367,5 +351,163 @@
       "color": "#D32F2F"
     }
   ],
-  "activities": []
+  "activities": [
+    {
+      "type": "updated",
+      "taskId": "task-001",
+      "taskTitle": "Design new homepage layout",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:03:22.531Z",
+      "id": "fQqsYpSWcFQ"
+    },
+    {
+      "type": "updated",
+      "taskId": "task-002",
+      "taskTitle": "Update documentation",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:03:32.347Z",
+      "id": "mvkj6Sfr7c4"
+    },
+    {
+      "type": "updated",
+      "taskId": "task-016",
+      "taskTitle": "Review client feedback",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:03:36.978Z",
+      "id": "rkJtUFdSFFo"
+    },
+    {
+      "type": "updated",
+      "taskId": "task-003",
+      "taskTitle": "Organize team meeting",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:19:03.330Z",
+      "id": "SJw3NDb62cY"
+    },
+    {
+      "type": "updated",
+      "taskId": "task-009",
+      "taskTitle": "Fix critical login bug",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:19:07.200Z",
+      "id": "QnrxoYnFEZ0"
+    },
+    {
+      "type": "updated",
+      "taskId": "task-011",
+      "taskTitle": "Write unit tests",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:19:12.967Z",
+      "id": "ebv9Tg8tRHo"
+    },
+    {
+      "type": "updated",
+      "taskId": "task-013",
+      "taskTitle": "Security audit",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:19:16.346Z",
+      "id": "GS6z8XYybyQ"
+    },
+    {
+      "type": "updated",
+      "taskId": "task-010",
+      "taskTitle": "Setup CI/CD pipeline",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:19:20.126Z",
+      "id": "3mK1vvJt6Qk"
+    },
+    {
+      "type": "completed",
+      "taskId": "task-017",
+      "taskTitle": "Update payment gateway integration",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:19:23.189Z",
+      "id": "oa880B7LhSg"
+    },
+    {
+      "type": "completed",
+      "taskId": "task-009",
+      "taskTitle": "Fix critical login bug",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:19:24.152Z",
+      "id": "De8t4Ga7Vy0"
+    },
+    {
+      "type": "completed",
+      "taskId": "task-008",
+      "taskTitle": "Add dark mode support",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:19:25.289Z",
+      "id": "YTCguc9rT4k"
+    },
+    {
+      "type": "completed",
+      "taskId": "task-011",
+      "taskTitle": "Write unit tests",
+      "actor": {
+        "id": "user-001",
+        "name": "John Doe",
+        "avatar": "JD",
+        "email": "john.doe@company.com"
+      },
+      "timestamp": "2026-09-03T21:19:26.250Z",
+      "id": "Umun-NJ3RSo"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

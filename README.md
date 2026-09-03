@@ -136,10 +136,10 @@ Karma and Jasmine with headless Chrome, running zoneless. Coverage on the last r
 
 | Metric     | Coverage |
 | ---------- | -------- |
-| Statements | 94.7%    |
-| Branches   | 87.2%    |
-| Functions  | 91.0%    |
-| Lines      | 94.3%    |
+| Statements | 93.51%   |
+| Branches   | 87.39%   |
+| Functions  | 89.6%    |
+| Lines      | 92.96%   |
 
 What is tested and how:
 
