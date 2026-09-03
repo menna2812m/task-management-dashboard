@@ -1,8 +1,13 @@
-import { ApplicationRef, provideZonelessChangeDetection } from '@angular/core';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+  TestRequest,
+} from '@angular/common/http/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { STATISTIC_FIXTURES } from '../../testing/statistic.fixtures';
 import { environment } from '../../../../../environments/environment';
 import { TaskStore } from '../../../tasks/data-access/task-store';
 import {
@@ -15,6 +20,15 @@ import { DashboardPage } from './dashboard-page';
 describe('DashboardPage', () => {
   let fixture: ComponentFixture<DashboardPage>;
   let element: HTMLElement;
+
+  /**
+   * The page owns two resources (tasks, statistics); a spec may leave one pending, so wait
+   * for a macrotask and run change detection instead of relying on app stability.
+   */
+  async function settle(): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve));
+    fixture.detectChanges();
+  }
 
   const tasks = [
     createTask({ status: 'todo', dueDate: isoDateFromToday(-1) }),
@@ -38,7 +52,33 @@ describe('DashboardPage', () => {
     fixture.detectChanges();
 
     TestBed.inject(HttpTestingController).expectOne(`${environment.apiUrl}/tasks`).flush(tasks);
-    await TestBed.inject(ApplicationRef).whenStable();
+    await settle();
+  });
+
+  const statisticsUrl = `${environment.apiUrl}/statistics`;
+
+  async function answerStatistics(respond: (request: TestRequest) => void): Promise<void> {
+    respond(TestBed.inject(HttpTestingController).expectOne(statisticsUrl));
+    await settle();
+  }
+
+  it('shows the trend from the statistics endpoint next to the live count', async () => {
+    await answerStatistics((request) => request.flush(STATISTIC_FIXTURES));
+
+    expect(text('[data-testid="stat-total"]')).toContain('4');
+    expect(text('[data-testid="stat-total"]')).not.toContain('156');
+    expect(text('[data-testid="stat-total"]')).toContain('+12 this week');
+    expect(text('[data-testid="stat-overdue"]')).toContain('+3 today');
+  });
+
+  it('still renders the four cards when the statistics endpoint fails', async () => {
+    await answerStatistics((request) =>
+      request.flush('down', { status: 500, statusText: 'Server Error' }),
+    );
+
+    expect(element.querySelectorAll('app-stat-card').length).toBe(4);
+    expect(text('[data-testid="stat-overdue"]')).toContain('Overdue');
+    expect(text('[data-testid="stat-overdue"]')).toContain('1');
   });
 
   function text(selector: string): string {
@@ -69,20 +109,20 @@ describe('DashboardPage', () => {
   it('asks for confirmation when a card requests deletion', async () => {
     const card = element.querySelector('[data-column="in_progress"] app-task-card')!;
     card.querySelector<HTMLButtonElement>('button[aria-label="Task actions"]')!.click();
-    await fixture.whenStable();
+    await settle();
 
     const deleteItem = Array.from(document.querySelectorAll<HTMLElement>('[role="menuitem"]')).find(
       (item) => item.textContent?.includes('Delete task'),
     );
     deleteItem!.click();
-    await fixture.whenStable();
+    await settle();
 
     const dialog = document.querySelector('mat-dialog-container');
     expect(dialog?.textContent).toContain('Delete task?');
     expect(dialog?.textContent).toContain(tasks[2].title);
 
     TestBed.inject(MatDialog).closeAll();
-    await fixture.whenStable();
+    await settle();
   });
 
   it('filters the board by status when a tab is selected', async () => {
@@ -91,7 +131,7 @@ describe('DashboardPage', () => {
     );
 
     doneTab?.click();
-    await fixture.whenStable();
+    await settle();
 
     expect(TestBed.inject(TaskStore).statusFilter()).toBe('done');
     expect(doneTab?.getAttribute('aria-selected')).toBe('true');

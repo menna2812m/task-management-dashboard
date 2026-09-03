@@ -1,47 +1,13 @@
-@let stats = taskStore.stats();
-
 <h1 class="sr-only">Dashboard</h1>
 
 <section aria-label="Overview" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-  <article class="stat-card" data-testid="stat-total">
-    <header class="stat-card__label">
-      <span class="emoji" aria-hidden="true">📊</span>
-      Total Tasks
-    </header>
-    <p class="stat-card__value">{{ stats.total }}</p>
-    <p class="stat-card__hint text-slate-500">{{ stats.total - stats.completed }} still open</p>
-  </article>
-
-  <article class="stat-card" data-testid="stat-completed">
-    <header class="stat-card__label">
-      <span class="emoji" aria-hidden="true">✅</span>
-      Completed
-    </header>
-    <p class="stat-card__value">{{ stats.completed }}</p>
-    <p class="stat-card__hint text-emerald-600">+{{ stats.completedToday }} today</p>
-  </article>
-
-  <article class="stat-card" data-testid="stat-in-progress">
-    <header class="stat-card__label">
-      <span class="emoji" aria-hidden="true">🔄</span>
-      In Progress
-    </header>
-    <p class="stat-card__value">{{ stats.inProgress }}</p>
-    <p class="stat-card__hint text-slate-500">of {{ stats.total }} tasks</p>
-  </article>
-
-  <article class="stat-card" data-testid="stat-overdue">
-    <header class="stat-card__label">
-      <app-icon name="warning" [size]="15" class="text-slate-500" />
-      Overdue
-    </header>
-    <p class="stat-card__value">{{ stats.overdue }}</p>
-    @if (stats.overdue > 0) {
-      <p class="stat-card__hint text-red-600">Need attention</p>
-    } @else {
-      <p class="stat-card__hint text-emerald-600">All on track</p>
-    }
-  </article>
+  @for (statistic of statistics(); track statistic.id) {
+    <app-stat-card
+      [statistic]="statistic"
+      [value]="liveValue(statistic)"
+      [attr.data-testid]="'stat-' + slotFor(statistic)"
+    />
+  }
 </section>
 
 <section

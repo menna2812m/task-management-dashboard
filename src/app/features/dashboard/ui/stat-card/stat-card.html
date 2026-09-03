@@ -1,0 +1,20 @@
+@let stat = statistic();
+
+<article class="stat-card">
+  <header class="stat-card__label">
+    @if (vectorIcon(); as icon) {
+      <app-icon [name]="icon" [size]="15" [style.color]="stat.color" />
+    } @else {
+      <span class="emoji" aria-hidden="true">{{ stat.icon }}</span>
+    }
+    <span data-testid="stat-title">{{ stat.title }}</span>
+  </header>
+
+  <p class="stat-card__value" data-testid="stat-value">{{ displayValue() }}</p>
+
+  @if (changeText()) {
+    <p class="stat-card__hint" data-testid="stat-change" [attr.data-change]="stat.changeType">
+      {{ changeText() }}
+    </p>
+  }
+</article>
