@@ -1,5 +1,5 @@
 .task-card {
-  border-color: var(--color-slate-200);
+  border-color: var(--color-grey-88);
   transition: box-shadow 120ms ease;
 
   &:hover {
@@ -11,12 +11,4 @@
   border-color: var(--color-red-200);
   border-left: 4px solid var(--color-red-500);
   background-color: var(--color-red-50);
-
-  footer {
-    border-color: var(--color-red-100);
-  }
-
-  li {
-    background-color: #fff;
-  }
 }

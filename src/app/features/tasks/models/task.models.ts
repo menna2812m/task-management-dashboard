@@ -23,6 +23,9 @@ export interface Task {
   updatedAt: string;
 }
 
+/** A task before the server has assigned it an id. */
+export type NewTask = Omit<Task, 'id'>;
+
 export interface TasksResponse {
   tasks: Task[];
   meta: {

@@ -29,11 +29,15 @@
         <app-icon name="pencil" [size]="16" class="mr-2 text-slate-500" />
         <span>Edit task</span>
       </button>
+      <button mat-menu-item type="button" (click)="delete.emit(currentTask)">
+        <app-icon name="trash" [size]="16" class="mr-2 text-red-500" />
+        <span>Delete task</span>
+      </button>
     </mat-menu>
   </header>
 
   <div class="min-w-0">
-    <h3 class="text-sm font-semibold text-slate-900">{{ currentTask.title }}</h3>
+    <h3 class="text-sm font-semibold text-grey-13">{{ currentTask.title }}</h3>
     <p class="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">{{ currentTask.description }}</p>
   </div>
 
@@ -49,19 +53,19 @@
   @if (currentTask.tags.length) {
     <ul class="flex flex-wrap gap-1.5" aria-label="Tags">
       @for (tag of currentTask.tags; track tag) {
-        <li class="rounded bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600">{{ tag }}</li>
+        <li class="px-1 text-[11px] text-slate-500">{{ tag }}</li>
       }
     </ul>
   }
 
-  <footer class="mt-1 flex items-center gap-2 border-t border-slate-100 pt-3">
+  <footer class="mt-1 flex items-center gap-2 border-t border-grey-88 pt-3">
     <span
       class="grid size-6 place-items-center rounded-full bg-brand-600 text-[10px] font-semibold text-white"
       aria-hidden="true"
     >
       {{ currentTask.assignee.avatar }}
     </span>
-    <span class="text-xs font-medium text-slate-600" [title]="currentTask.assignee.name">
+    <span class="text-xs font-medium text-grey-13" [title]="currentTask.assignee.name">
       &#64;{{ firstName() }}
     </span>
   </footer>

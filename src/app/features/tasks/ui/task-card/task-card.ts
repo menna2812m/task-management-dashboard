@@ -17,6 +17,7 @@ export class TaskCard {
   readonly showStatus = input(false);
 
   readonly edit = output<Task>();
+  readonly delete = output<Task>();
 
   protected readonly dueInfo = computed(() => getDueInfo(this.task()));
   protected readonly firstName = computed(() => this.task().assignee.name.split(' ')[0]);
@@ -28,7 +29,7 @@ export class TaskCard {
   };
 
   protected readonly priorityClasses: Record<TaskPriority, string> = {
-    low: 'bg-emerald-50 text-emerald-700',
+    low: 'bg-priority-low-bg text-priority-low',
     medium: 'bg-amber-50 text-amber-700',
     high: 'bg-red-50 text-red-600',
   };

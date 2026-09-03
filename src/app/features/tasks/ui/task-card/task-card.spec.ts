@@ -84,6 +84,24 @@ describe('TaskCard', () => {
     expect(edited).toEqual([task]);
   });
 
+  it('emits delete when the delete action is chosen from the card menu', async () => {
+    const task = createTask();
+    const element = await render(task);
+    const deleted: Task[] = [];
+    fixture.componentInstance.delete.subscribe((value) => deleted.push(value));
+
+    element.querySelector<HTMLButtonElement>('button[aria-label="Task actions"]')!.click();
+    await fixture.whenStable();
+
+    const deleteItem = Array.from(document.querySelectorAll<HTMLElement>('[role="menuitem"]')).find(
+      (item) => item.textContent?.includes('Delete task'),
+    );
+    deleteItem!.click();
+    await fixture.whenStable();
+
+    expect(deleted).toEqual([task]);
+  });
+
   it('shows the status only when asked to', async () => {
     const element = await render(createTask({ status: 'in_progress' }));
     expect(element.textContent).not.toContain('In progress');

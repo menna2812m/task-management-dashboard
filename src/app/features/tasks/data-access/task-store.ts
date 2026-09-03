@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Task, TaskPriority, TaskStatus } from '../models/task.models';
+import { NewTask, Task, TaskFormValue, TaskPriority, TaskStatus } from '../models/task.models';
 import { isCompletedOn, isTaskOverdue } from '../utils/task-status.utils';
 import { TaskApi } from './task-api';
 
@@ -35,6 +35,9 @@ export class TaskStore {
 
   readonly isLoading = this.taskApi.tasks.isLoading;
   readonly error = this.taskApi.tasks.error;
+
+  /** True while a create, update or delete request is in flight. */
+  readonly isSaving = signal(false);
 
   readonly filteredTasks = computed(() => {
     const searchTerm = this.searchTerm().trim().toLowerCase();
@@ -112,5 +115,84 @@ export class TaskStore {
 
   reload(): void {
     this.taskApi.tasks.reload();
+  }
+
+  /** Creates a task from the form value and refreshes the list. */
+  async createTask(value: TaskFormValue): Promise<Task> {
+    const now = new Date().toISOString();
+    const draft: NewTask = {
+      ...this.toTaskFields(value),
+      completedAt: value.status === 'done' ? now : undefined,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    return this.mutate(() => this.taskApi.create(draft));
+  }
+
+  /** Applies the form value to an existing task and refreshes the list. */
+  async updateTask(existing: Task, value: TaskFormValue): Promise<Task> {
+    const now = new Date().toISOString();
+    const updated: Task = {
+      ...existing,
+      ...this.toTaskFields(value),
+      completedAt: this.completedAtFor(existing, value.status, now),
+      updatedAt: now,
+    };
+
+    return this.mutate(() => this.taskApi.update(updated));
+  }
+
+  /** Deletes a task and refreshes the list. */
+  deleteTask(id: string): Promise<void> {
+    return this.mutate(() => this.taskApi.remove(id));
+  }
+
+  /**
+   * Runs one mutation, tracking the saving flag and reloading the list on success.
+   * Errors propagate to the caller so the UI can report them.
+   */
+  private async mutate<T>(request: () => Promise<T>): Promise<T> {
+    this.isSaving.set(true);
+
+    try {
+      const result = await request();
+      this.taskApi.tasks.reload();
+
+      return result;
+    } finally {
+      this.isSaving.set(false);
+    }
+  }
+
+  /** Maps the flat form value onto task fields, resolving the assignee by id. */
+  private toTaskFields(value: TaskFormValue) {
+    const assignee = this.assignees().find((candidate) => candidate.id === value.assigneeId);
+
+    if (!assignee) {
+      throw new Error(`Unknown assignee "${value.assigneeId}"`);
+    }
+
+    return {
+      title: value.title,
+      description: value.description,
+      status: value.status,
+      priority: value.priority,
+      dueDate: value.dueDate,
+      assignee,
+      tags: value.tags,
+    };
+  }
+
+  /**
+   * A task keeps its original completion time while it stays done, is stamped when it
+   * becomes done, and loses the stamp when it is reopened.
+   */
+  private completedAtFor(existing: Task, status: TaskStatus, now: string): string | undefined {
+    if (status !== 'done') {
+      return undefined;
+    }
+
+    return existing.completedAt ?? now;
   }
 }

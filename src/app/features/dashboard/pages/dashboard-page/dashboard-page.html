@@ -139,7 +139,11 @@
             <ul class="flex flex-col gap-3">
               @for (task of tasks; track task.id) {
                 <li>
-                  <app-task-card [task]="task" (edit)="taskDialog.openEdit($event)" />
+                  <app-task-card
+                    [task]="task"
+                    (edit)="taskDialog.openEdit($event)"
+                    (delete)="taskDialog.confirmDelete($event)"
+                  />
                 </li>
               } @empty {
                 <li

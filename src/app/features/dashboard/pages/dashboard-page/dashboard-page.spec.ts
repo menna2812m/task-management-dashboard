@@ -2,6 +2,7 @@ import { ApplicationRef, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../../../../environments/environment';
 import { TaskStore } from '../../../tasks/data-access/task-store';
 import {
@@ -63,6 +64,25 @@ describe('DashboardPage', () => {
   it('places each task card in its status column', () => {
     expect(element.querySelectorAll('[data-column="todo"] app-task-card').length).toBe(2);
     expect(element.querySelectorAll('[data-column="done"] app-task-card').length).toBe(1);
+  });
+
+  it('asks for confirmation when a card requests deletion', async () => {
+    const card = element.querySelector('[data-column="in_progress"] app-task-card')!;
+    card.querySelector<HTMLButtonElement>('button[aria-label="Task actions"]')!.click();
+    await fixture.whenStable();
+
+    const deleteItem = Array.from(document.querySelectorAll<HTMLElement>('[role="menuitem"]')).find(
+      (item) => item.textContent?.includes('Delete task'),
+    );
+    deleteItem!.click();
+    await fixture.whenStable();
+
+    const dialog = document.querySelector('mat-dialog-container');
+    expect(dialog?.textContent).toContain('Delete task?');
+    expect(dialog?.textContent).toContain(tasks[2].title);
+
+    TestBed.inject(MatDialog).closeAll();
+    await fixture.whenStable();
   });
 
   it('filters the board by status when a tab is selected', async () => {
