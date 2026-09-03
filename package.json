@@ -21,7 +21,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "generate:data": "node mock-api/generate-data.cjs",
-    "mock:api": "json-server mock-api/db.json --port 3000"
+    "mock:api": "json-server mock-api/db.json --port 3000",
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadless --code-coverage"
   },
   "prettier": {
     "printWidth": 100,
