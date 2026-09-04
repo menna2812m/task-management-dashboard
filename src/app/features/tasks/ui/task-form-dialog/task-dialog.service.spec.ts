@@ -18,6 +18,8 @@ describe('TaskDialogService', () => {
   const formValue: TaskFormValue = {
     title: 'Ship the board',
     description: 'Finish the kanban view',
+    titleAr: 'إطلاق لوحة المهام',
+    descriptionAr: 'إنهاء عرض كانبان',
     status: 'in_progress',
     priority: 'high',
     dueDate: isoDateFromToday(2),

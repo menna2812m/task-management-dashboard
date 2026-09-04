@@ -1,43 +1,80 @@
 <h2 mat-dialog-title class="task-dialog-title">
-  {{ data.task ? 'Edit task' : 'Create task' }}
+  {{ (data.task ? 'editTask' : 'createTask') | translate }}
   <span class="task-dialog-subtitle">
-    {{ data.task ? 'Update the task details below.' : 'Add the details to keep work moving.' }}
+    {{ (data.task ? 'updateDetails' : 'addDetails') | translate }}
   </span>
 </h2>
 
 <form [formGroup]="form" (ngSubmit)="submit()">
   <mat-dialog-content class="task-form-content grid gap-5 sm:min-w-xl">
-    <div
-      class="task-control"
-      [class.is-invalid]="form.controls.title.touched && form.controls.title.invalid"
-    >
-      <label for="task-title">{{ 'title' | translate }}</label>
-      <input
-        id="task-title"
-        class="app-input"
-        type="text"
-        formControlName="title"
-        autocomplete="off"
-      />
-      @if (form.controls.title.touched && form.controls.title.invalid) {
-        <p class="task-control-error">Enter a title between 3 and 100 characters.</p>
-      }
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div
+        class="task-control"
+        [class.is-invalid]="form.controls.title.touched && form.controls.title.invalid"
+        dir="ltr"
+      >
+        <label for="task-title">{{ 'titleEn' | translate }}</label>
+        <input
+          id="task-title"
+          class="app-input"
+          type="text"
+          formControlName="title"
+          autocomplete="off"
+        />
+        @if (form.controls.title.touched && form.controls.title.invalid) {
+          <p class="task-control-error">{{ 'titleError' | translate }}</p>
+        }
+      </div>
+
+      <div
+        class="task-control"
+        [class.is-invalid]="form.controls.titleAr.touched && form.controls.titleAr.invalid"
+        dir="rtl"
+      >
+        <label for="task-title-ar">{{ 'titleAr' | translate }}</label>
+        <input id="task-title-ar" class="app-input" type="text" formControlName="titleAr" />
+        @if (form.controls.titleAr.touched && form.controls.titleAr.invalid) {
+          <p class="task-control-error">{{ 'titleArError' | translate }}</p>
+        }
+      </div>
     </div>
 
-    <div
-      class="task-control task-control-textarea"
-      [class.is-invalid]="form.controls.description.touched && form.controls.description.invalid"
-    >
-      <label for="task-description">{{ 'description' | translate }}</label>
-      <textarea
-        id="task-description"
-        class="app-input"
-        formControlName="description"
-        rows="3"
-      ></textarea>
-      @if (form.controls.description.touched && form.controls.description.invalid) {
-        <p class="task-control-error">Description is required.</p>
-      }
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div
+        class="task-control task-control-textarea"
+        [class.is-invalid]="form.controls.description.touched && form.controls.description.invalid"
+        dir="ltr"
+      >
+        <label for="task-description">{{ 'descriptionEn' | translate }}</label>
+        <textarea
+          id="task-description"
+          class="app-input"
+          formControlName="description"
+          rows="3"
+        ></textarea>
+        @if (form.controls.description.touched && form.controls.description.invalid) {
+          <p class="task-control-error">{{ 'descriptionError' | translate }}</p>
+        }
+      </div>
+
+      <div
+        class="task-control task-control-textarea"
+        [class.is-invalid]="
+          form.controls.descriptionAr.touched && form.controls.descriptionAr.invalid
+        "
+        dir="rtl"
+      >
+        <label for="task-description-ar">{{ 'descriptionAr' | translate }}</label>
+        <textarea
+          id="task-description-ar"
+          class="app-input"
+          formControlName="descriptionAr"
+          rows="3"
+        ></textarea>
+        @if (form.controls.descriptionAr.touched && form.controls.descriptionAr.invalid) {
+          <p class="task-control-error">{{ 'descriptionArError' | translate }}</p>
+        }
+      </div>
     </div>
 
     <div class="grid gap-5 sm:grid-cols-2">
@@ -68,7 +105,7 @@
         <label for="task-due-date">{{ 'dueDate' | translate }}</label>
         <input id="task-due-date" class="app-input" type="date" formControlName="dueDate" />
         @if (form.controls.dueDate.touched && form.controls.dueDate.invalid) {
-          <p class="task-control-error">Due date is required.</p>
+          <p class="task-control-error">{{ 'dueDateError' | translate }}</p>
         }
       </div>
 
@@ -84,7 +121,7 @@
           }
         </select>
         @if (form.controls.assigneeId.touched && form.controls.assigneeId.invalid) {
-          <p class="task-control-error">Assignee is required.</p>
+          <p class="task-control-error">{{ 'assigneeError' | translate }}</p>
         }
       </div>
     </div>
@@ -103,7 +140,7 @@
               [formControlName]="index"
             />
             @if (tagControl.touched && tagControl.invalid) {
-              <p class="task-control-error">Tag cannot be empty.</p>
+              <p class="task-control-error">{{ 'tagError' | translate }}</p>
             }
           </div>
 

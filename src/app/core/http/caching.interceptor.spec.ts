@@ -43,6 +43,18 @@ describe('cachingInterceptor', () => {
     await expectAsync(filtered).toBeResolvedTo([2]);
   });
 
+  it('caches different languages independently', async () => {
+    const english = firstValueFrom(
+      http.get('/api/tasks', { headers: { 'Accept-Language': 'en' } }),
+    );
+    httpTesting.expectOne('/api/tasks').flush([{ title: 'Task' }]);
+    await english;
+
+    const arabic = firstValueFrom(http.get('/api/tasks', { headers: { 'Accept-Language': 'ar' } }));
+    httpTesting.expectOne('/api/tasks').flush([{ title: 'مهمة' }]);
+    await expectAsync(arabic).toBeResolvedTo([{ title: 'مهمة' }]);
+  });
+
   it('does not cache failed responses', async () => {
     const failed = firstValueFrom(http.get('/api/tasks'));
     httpTesting.expectOne('/api/tasks').flush('boom', { status: 500, statusText: 'Error' });

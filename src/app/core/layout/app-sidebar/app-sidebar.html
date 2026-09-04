@@ -1,0 +1,53 @@
+<aside
+  class="fixed inset-y-0 start-0 z-20 flex w-16 flex-col border-e border-slate-200 bg-white lg:w-56"
+>
+  <a
+    routerLink="/dashboard"
+    class="flex h-14 items-center gap-2.5 border-b border-slate-200 px-4 focus-visible:outline-2 focus-visible:outline-brand-600 lg:px-5"
+  >
+    <span
+      class="grid size-7 shrink-0 place-items-center rounded-md bg-brand-600 text-white"
+      aria-hidden="true"
+    >
+      <img src="icons/clipboard.png" alt="" width="9" height="9" class="glyph" />
+    </span>
+    <span class="hidden truncate text-[19px] font-semibold text-brand-700 lg:inline">
+      {{ 'taskManager' | translate }}
+    </span>
+  </a>
+
+  <nav class="space-y-1 px-2 py-3 lg:px-3" [attr.aria-label]="'mainNavigation' | translate">
+    @for (item of items(); track item.labelKey) {
+      @if (item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="nav-link--active"
+          class="nav-link"
+          [title]="(item.labelKey | translate) + ' — ' + ('comingSoon' | translate)"
+        >
+          <span class="emoji" aria-hidden="true">{{ item.emoji }}</span>
+          <span class="nav-link__label hidden lg:inline">{{ item.labelKey | translate }}</span>
+        </a>
+      } @else {
+        <span
+          class="nav-link nav-link--disabled"
+          aria-disabled="true"
+          [title]="item.labelKey | translate"
+        >
+          <span class="emoji" aria-hidden="true">{{ item.emoji }}</span>
+          <span class="nav-link__label hidden lg:inline">{{ item.labelKey | translate }}</span>
+        </span>
+      }
+    }
+  </nav>
+
+  <div class="px-2 lg:px-3">
+    <button type="button" class="btn-primary w-full cursor-pointer" (click)="createTask.emit()">
+      <app-icon name="plus" [size]="14" />
+      <span class="hidden lg:inline">{{ 'newTask' | translate }}</span>
+      <span class="sr-only lg:hidden">{{ 'newTask' | translate }}</span>
+    </button>
+  </div>
+
+  <div class="flex-1"></div>
+</aside>

@@ -2,6 +2,7 @@ import { HttpClient, httpResource } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { TranslationService } from '../../../core/i18n/translation.service';
 import { Activity, NewActivity } from '../models/activity.models';
 
 const FEED_SIZE = 10;
@@ -15,11 +16,18 @@ const FEED_SIZE = 10;
 })
 export class ActivityApi {
   private readonly http = inject(HttpClient);
+  private readonly translations = inject(TranslationService);
   private readonly activitiesUrl = `${environment.apiUrl}/activities`;
 
-  private readonly stored = httpResource<Activity[]>(() => this.activitiesUrl, {
-    defaultValue: [],
-  });
+  private readonly stored = httpResource<Activity[]>(
+    () => {
+      this.translations.language();
+      return this.activitiesUrl;
+    },
+    {
+      defaultValue: [],
+    },
+  );
   private readonly recorded = signal<Activity[]>([]);
 
   readonly isLoading = this.stored.isLoading;

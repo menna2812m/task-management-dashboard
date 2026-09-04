@@ -1,0 +1,20 @@
+services:
+  frontend:
+    build:
+      context: .
+      target: frontend
+    ports:
+      - '8080:80'
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      target: api
+    expose:
+      - '3000'
+    volumes:
+      - ./mock-api/db.json:/app/mock-api/db.json
+    restart: unless-stopped
