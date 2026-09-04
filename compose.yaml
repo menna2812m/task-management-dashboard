@@ -6,7 +6,8 @@ services:
     ports:
       - '8080:80'
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     restart: unless-stopped
 
   api:
@@ -16,5 +17,7 @@ services:
     expose:
       - '3000'
     volumes:
-      - ./mock-api/db.json:/app/mock-api/db.json
+      # JSON Server writes through a temporary file and atomic rename. Mount the directory
+      # so that operation works on Docker Desktop for Windows.
+      - ./mock-api:/app/mock-api
     restart: unless-stopped
