@@ -38,6 +38,7 @@ export const AR_TRANSLATIONS: Record<string, string> = {
   nothingTodo: 'لا توجد مهام للبدء بها',
   nothingInProgress: 'لا توجد مهام قيد التنفيذ',
   nothingDone: 'لا توجد مهام مكتملة بعد',
+  boardDropLabel: 'مهام {status}. اسحب مهمة إلى هنا لتغيير حالتها.',
   allPriorities: 'كل الأولويات',
   allAssignees: 'كل المسند إليهم',
   clearFilters: 'مسح الفلاتر',

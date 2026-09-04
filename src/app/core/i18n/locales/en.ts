@@ -38,6 +38,7 @@ export const EN_TRANSLATIONS: Record<string, string> = {
   nothingTodo: 'Nothing to do',
   nothingInProgress: 'Nothing in progress',
   nothingDone: 'Nothing done yet',
+  boardDropLabel: '{status} tasks. Drag a task here to change its status.',
   allPriorities: 'All priorities',
   allAssignees: 'All assignees',
   clearFilters: 'Clear filters',

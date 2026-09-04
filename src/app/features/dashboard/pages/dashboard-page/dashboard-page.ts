@@ -127,6 +127,12 @@ export class DashboardPage {
     return STATISTIC_SLOTS[statistic.id]?.slug ?? statistic.id;
   }
 
+  protected boardAriaLabel(column: BoardColumn): string {
+    return this.translations
+      .translate('boardDropLabel')
+      .replace('{status}', this.translations.translate(column.label));
+  }
+
   protected onPriorityChange(event: Event): void {
     this.taskStore.setPriorityFilter(
       (event.target as HTMLSelectElement).value as TaskPriorityFilter,

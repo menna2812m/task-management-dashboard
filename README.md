@@ -195,5 +195,6 @@ Fixtures live in `testing/` folders. Zoneless testing has two conventions worth 
 - The mock `/activities` collection starts empty. Entries appear as tasks change.
 - Sub-routes for Calendar, Analytics, and Settings exist in the design but are shown as disabled navigation items.
 - Card status can be changed by dragging a card between board columns. Reordering within a column is visual only; task ordering is not persisted.
-- CI runs formatting, linting, headless tests with coverage, and a production build for every push and pull request. Docker and i18n are not implemented yet.
+- CI runs formatting, linting, headless tests with coverage, and a production build for every push and pull request. Docker Compose and English/Arabic localization are included.
+- JSON Server does not implement language negotiation, so the mock localization interceptor adapts seeded responses; a production API should honor `Accept-Language` directly.
 - Responsive behaviour uses Tailwind breakpoints but has only been verified at desktop widths.
