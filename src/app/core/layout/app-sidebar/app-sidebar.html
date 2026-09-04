@@ -1,5 +1,5 @@
 <aside
-  class="fixed inset-y-0 left-0 z-20 flex w-16 flex-col border-r border-slate-200 bg-white lg:w-56"
+  class="fixed inset-y-0 start-0 z-20 flex w-16 flex-col border-e border-slate-200 bg-white lg:w-56"
 >
   <a
     routerLink="/dashboard"
@@ -16,14 +16,14 @@
     </span>
   </a>
 
-  <nav class="space-y-1 px-2 py-3 lg:px-3" aria-label="Main">
+  <nav class="space-y-1 px-2 py-3 lg:px-3" [attr.aria-label]="'mainNavigation' | translate">
     @for (item of items(); track item.labelKey) {
       @if (item.route) {
         <a
           [routerLink]="item.route"
           routerLinkActive="nav-link--active"
           class="nav-link"
-          [title]="item.labelKey | translate"
+          [title]="(item.labelKey | translate) + ' — ' + ('comingSoon' | translate)"
         >
           <span class="emoji" aria-hidden="true">{{ item.emoji }}</span>
           <span class="nav-link__label hidden lg:inline">{{ item.labelKey | translate }}</span>

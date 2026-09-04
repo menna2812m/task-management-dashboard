@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { Assignee } from '../../../features/tasks/models/task.models';
 import { AppLanguage } from '../../i18n/translation.service';
 import { TranslatePipe } from '../../i18n/translate.pipe';
+import { User } from '../../models/user.models';
 import { Icon } from '../../ui/icon/icon';
 
 @Component({
@@ -14,7 +14,7 @@ import { Icon } from '../../ui/icon/icon';
 export class AppHeader {
   readonly searchTerm = input('');
   readonly language = input.required<AppLanguage>();
-  readonly currentUser = input.required<Assignee>();
+  readonly currentUser = input.required<User>();
 
   readonly searchChange = output<string>();
   readonly languageChange = output<AppLanguage>();

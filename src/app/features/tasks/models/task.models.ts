@@ -2,12 +2,7 @@ export type TaskStatus = 'todo' | 'in_progress' | 'done';
 
 export type TaskPriority = 'low' | 'medium' | 'high';
 
-export interface Assignee {
-  id: string;
-  name: string;
-  avatar: string;
-  email: string;
-}
+export type Assignee = User;
 
 export interface LocalizedTaskText {
   title: string;
@@ -59,3 +54,4 @@ export interface TaskDialogData {
   task?: Task;
   assignees: readonly Assignee[];
 }
+import { User } from '../../../core/models/user.models';

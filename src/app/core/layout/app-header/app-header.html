@@ -1,7 +1,7 @@
 <header
-  class="fixed inset-x-0 top-0 z-10 flex h-14 items-center gap-4 border-b border-slate-200 bg-white pr-4 pl-20 lg:pr-6 lg:pl-60"
+  class="fixed inset-x-0 top-0 z-10 flex h-14 items-center gap-2 border-b border-slate-200 bg-white pe-4 ps-20 sm:gap-4 lg:pe-6 lg:ps-60"
 >
-  <div class="flex flex-1 justify-center">
+  <div class="flex min-w-0 flex-1 justify-center">
     <label class="relative block w-full max-w-md">
       <span class="sr-only">{{ 'search' | translate }}</span>
       <app-icon
@@ -33,7 +33,7 @@
     </button>
     <span
       class="grid size-8 place-items-center rounded-full bg-brand-600 text-xs font-semibold text-white"
-      [attr.aria-label]="currentUser().name"
+      [attr.aria-label]="('signedInAs' | translate) + ' ' + currentUser().name"
       role="img"
     >
       {{ currentUser().avatar }}
