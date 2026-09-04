@@ -7,6 +7,8 @@ import { TranslationService } from '../i18n/translation.service';
 import { mockLocalizationInterceptor } from './mock-localization.interceptor';
 
 describe('mockLocalizationInterceptor', () => {
+  afterEach(() => localStorage.removeItem('task-manager-language'));
+
   it('localizes mock task data when Arabic is active', async () => {
     TestBed.configureTestingModule({
       providers: [

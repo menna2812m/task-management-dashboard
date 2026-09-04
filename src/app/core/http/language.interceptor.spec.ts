@@ -24,7 +24,10 @@ describe('languageInterceptor', () => {
     translations = TestBed.inject(TranslationService);
   });
 
-  afterEach(() => httpTesting.verify());
+  afterEach(() => {
+    httpTesting.verify();
+    localStorage.removeItem('task-manager-language');
+  });
 
   it('sends the active language in Accept-Language', async () => {
     translations.setLanguage('ar');

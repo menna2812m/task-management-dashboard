@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { Icon } from '../../../../core/ui/icon/icon';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
 import { Task, TaskPriority, TaskStatus } from '../../models/task.models';
 import { DueKind, getDueInfo } from '../../utils/task-status.utils';
 
 @Component({
   selector: 'app-task-card',
-  imports: [MatMenuModule, Icon],
+  imports: [MatMenuModule, Icon, TranslatePipe],
   templateUrl: './task-card.html',
   styleUrl: './task-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,9 +26,9 @@ export class TaskCard {
   protected readonly firstName = computed(() => this.task().assignee.name.split(' ')[0]);
 
   protected readonly priorityLabels: Record<TaskPriority, string> = {
-    low: 'Low',
-    medium: 'Medium',
-    high: 'High',
+    low: 'low',
+    medium: 'medium',
+    high: 'high',
   };
 
   protected readonly priorityClasses: Record<TaskPriority, string> = {
@@ -37,9 +38,9 @@ export class TaskCard {
   };
 
   protected readonly statusLabels: Record<TaskStatus, string> = {
-    todo: 'To do',
-    in_progress: 'In progress',
-    done: 'Done',
+    todo: 'todo',
+    in_progress: 'inProgress',
+    done: 'done',
   };
 
   /** Emoji glyphs, matching the design; hidden from assistive tech since the label carries meaning. */

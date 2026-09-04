@@ -29,7 +29,7 @@
         [attr.aria-selected]="taskStore.statusFilter() === tab.value"
         (click)="taskStore.setStatusFilter(tab.value)"
       >
-        {{ tab.label }}
+        {{ tab.label | translate }}
       </button>
     }
   </div>
@@ -42,10 +42,10 @@
         [value]="taskStore.priorityFilter()"
         (change)="onPriorityChange($event)"
       >
-        <option value="all">All priorities</option>
-        <option value="high">High priority</option>
-        <option value="medium">Medium priority</option>
-        <option value="low">Low priority</option>
+        <option value="all">{{ 'allPriorities' | translate }}</option>
+        <option value="high">{{ 'high' | translate }}</option>
+        <option value="medium">{{ 'medium' | translate }}</option>
+        <option value="low">{{ 'low' | translate }}</option>
       </select>
       <app-icon
         name="chevron-down"
@@ -92,7 +92,7 @@
               [id]="'column-title-' + column.status"
               class="text-[11px] font-bold tracking-wide uppercase text-[#212121]"
             >
-              {{ column.label }}
+              {{ column.label | translate }}
             </h2>
             <span
               data-testid="column-count"
@@ -113,7 +113,7 @@
               class="task-list flex flex-1 flex-col gap-3"
               [cdkDropListData]="column.status"
               [cdkDropListDisabled]="taskStore.isSaving()"
-              [attr.aria-label]="column.label + ' tasks. Drag a task here to change its status.'"
+              [attr.aria-label]="(column.label | translate) + ' tasks'"
               (cdkDropListDropped)="onTaskDrop($event)"
             >
               @for (task of tasks; track task.id) {
@@ -129,7 +129,7 @@
                 <li
                   class="rounded-lg border border-dashed border-slate-200 px-3 py-8 text-center text-xs text-slate-400"
                 >
-                  {{ column.emptyMessage }}
+                  {{ column.emptyMessage | translate }}
                 </li>
               }
             </ul>

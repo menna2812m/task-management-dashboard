@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Icon } from '../../../../core/ui/icon/icon';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
+import { TranslationService } from '../../../../core/i18n/translation.service';
 import {
   TaskPriorityFilter,
   TaskStats,
@@ -42,7 +44,15 @@ const STATISTIC_SLOTS: Record<string, { slug: string; stat: keyof TaskStats }> =
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [DragDropModule, TaskCard, StatCard, ActivityFeed, DistributionChart, Icon],
+  imports: [
+    DragDropModule,
+    TaskCard,
+    StatCard,
+    ActivityFeed,
+    DistributionChart,
+    Icon,
+    TranslatePipe,
+  ],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,6 +63,7 @@ export class DashboardPage {
   private readonly statisticsApi = inject(StatisticsApi);
   protected readonly activityApi = inject(ActivityApi);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly translations = inject(TranslationService);
 
   /** Cards from the backend, or the built-in set while loading or when the request failed. */
   protected readonly statistics = computed<readonly Statistic[]>(() => {
@@ -69,9 +80,13 @@ export class DashboardPage {
     const count = (status: TaskStatus) => tasks.filter((task) => task.status === status).length;
 
     return [
-      { label: 'To do', value: count('todo'), color: '#64B5F6' },
-      { label: 'In progress', value: count('in_progress'), color: '#FF6F00' },
-      { label: 'Done', value: count('done'), color: '#388E3C' },
+      { label: this.translations.translate('todo'), value: count('todo'), color: '#64B5F6' },
+      {
+        label: this.translations.translate('inProgress'),
+        value: count('in_progress'),
+        color: '#FF6F00',
+      },
+      { label: this.translations.translate('done'), value: count('done'), color: '#388E3C' },
     ];
   });
 
@@ -82,23 +97,23 @@ export class DashboardPage {
       tasks.filter((task) => task.priority === priority).length;
 
     return [
-      { label: 'High', value: count('high'), color: '#D32F2F' },
-      { label: 'Medium', value: count('medium'), color: '#FF6F00' },
-      { label: 'Low', value: count('low'), color: '#388E3C' },
+      { label: this.translations.translate('high'), value: count('high'), color: '#D32F2F' },
+      { label: this.translations.translate('medium'), value: count('medium'), color: '#FF6F00' },
+      { label: this.translations.translate('low'), value: count('low'), color: '#388E3C' },
     ];
   });
 
   protected readonly statusTabs: readonly StatusTab[] = [
-    { value: 'all', label: 'All' },
-    { value: 'todo', label: 'To Do' },
-    { value: 'in_progress', label: 'In Progress' },
-    { value: 'done', label: 'Done' },
+    { value: 'all', label: 'allStatuses' },
+    { value: 'todo', label: 'todo' },
+    { value: 'in_progress', label: 'inProgress' },
+    { value: 'done', label: 'done' },
   ];
 
   protected readonly columns: readonly BoardColumn[] = [
-    { status: 'todo', label: 'To Do', emptyMessage: 'Nothing to do' },
-    { status: 'in_progress', label: 'In Progress', emptyMessage: 'Nothing in progress' },
-    { status: 'done', label: 'Done', emptyMessage: 'Nothing done yet' },
+    { status: 'todo', label: 'todo', emptyMessage: 'nothingTodo' },
+    { status: 'in_progress', label: 'inProgress', emptyMessage: 'nothingInProgress' },
+    { status: 'done', label: 'done', emptyMessage: 'nothingDone' },
   ];
 
   /** The store's count for a statistic, or undefined for cards we do not compute locally. */
