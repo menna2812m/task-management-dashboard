@@ -1,4 +1,4 @@
-import { Assignee } from './task.models';
+import { Assignee, Task } from './task.models';
 
 export type ActivityType = 'created' | 'updated' | 'completed' | 'deleted';
 
@@ -9,6 +9,7 @@ export interface Activity {
   taskId: string;
   /** Captured at the time of the change so the entry survives the task being deleted. */
   taskTitle: string;
+  taskTranslations?: Task['translations'];
   actor: Assignee;
   timestamp: string;
 }

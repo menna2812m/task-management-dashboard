@@ -27,7 +27,7 @@ export class TaskFormDialog {
 
   protected readonly form = this.formBuilder.group({
     title: [
-      this.data.task?.title ?? '',
+      this.data.task?.translations?.en.title ?? this.data.task?.title ?? '',
       [
         Validators.required,
         noWhitespaceValidator,
@@ -36,7 +36,20 @@ export class TaskFormDialog {
       ],
     ],
     description: [
-      this.data.task?.description ?? '',
+      this.data.task?.translations?.en.description ?? this.data.task?.description ?? '',
+      [Validators.required, noWhitespaceValidator, Validators.maxLength(500)],
+    ],
+    titleAr: [
+      this.data.task?.translations?.ar.title ?? '',
+      [
+        Validators.required,
+        noWhitespaceValidator,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+      ],
+    ],
+    descriptionAr: [
+      this.data.task?.translations?.ar.description ?? '',
       [Validators.required, noWhitespaceValidator, Validators.maxLength(500)],
     ],
     status: this.formBuilder.control(this.data.task?.status ?? 'todo'),
@@ -78,6 +91,8 @@ export class TaskFormDialog {
       ...value,
       title: value.title.trim(),
       description: value.description.trim(),
+      titleAr: value.titleAr.trim(),
+      descriptionAr: value.descriptionAr.trim(),
       tags: value.tags.map((tag) => tag.trim()),
     });
   }

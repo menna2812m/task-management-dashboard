@@ -9,6 +9,7 @@ import { HttpCacheService } from './http-cache.service';
  */
 export const cachingInterceptor: HttpInterceptorFn = (request, next) => {
   const cache = inject(HttpCacheService);
+  const key = cacheKey(request.urlWithParams, request.headers.get('Accept-Language'));
 
   if (request.method !== 'GET') {
     cache.invalidate(collectionUrl(request.method, request.urlWithParams));
@@ -16,7 +17,7 @@ export const cachingInterceptor: HttpInterceptorFn = (request, next) => {
     return next(request);
   }
 
-  const cached = cache.get(request.urlWithParams);
+  const cached = cache.get(key);
 
   if (cached) {
     return of(cached.clone());
@@ -25,11 +26,16 @@ export const cachingInterceptor: HttpInterceptorFn = (request, next) => {
   return next(request).pipe(
     tap((event) => {
       if (event instanceof HttpResponse && event.ok) {
-        cache.set(request.urlWithParams, event);
+        cache.set(key, event);
       }
     }),
   );
 };
+
+/** The same URL can contain different content for each requested language. */
+function cacheKey(url: string, language: string | null): string {
+  return `${url}::language=${language ?? 'default'}`;
+}
 
 /**
  * The collection a write belongs to: POST targets the collection itself, while PUT, PATCH

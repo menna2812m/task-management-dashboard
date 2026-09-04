@@ -9,10 +9,20 @@ export interface Assignee {
   email: string;
 }
 
+export interface LocalizedTaskText {
+  title: string;
+  description: string;
+}
+
 export interface Task {
   id: string;
   title: string;
   description: string;
+  /** Bilingual content supplied when a task is created or edited. */
+  translations?: {
+    en: LocalizedTaskText;
+    ar: LocalizedTaskText;
+  };
   status: TaskStatus;
   priority: TaskPriority;
   dueDate: string;
@@ -36,6 +46,8 @@ export interface TasksResponse {
 export interface TaskFormValue {
   title: string;
   description: string;
+  titleAr: string;
+  descriptionAr: string;
   status: TaskStatus;
   priority: TaskPriority;
   dueDate: string;

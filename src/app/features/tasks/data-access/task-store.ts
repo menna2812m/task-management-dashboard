@@ -185,6 +185,8 @@ export class TaskStore {
     return this.updateTask(task, {
       title: task.title,
       description: task.description,
+      titleAr: task.translations?.ar.title ?? task.title,
+      descriptionAr: task.translations?.ar.description ?? task.description,
       status,
       priority: task.priority,
       dueDate: task.dueDate,
@@ -228,6 +230,7 @@ export class TaskStore {
       type,
       taskId: task.id,
       taskTitle: task.title,
+      taskTranslations: task.translations,
       actor: CURRENT_USER,
       timestamp: new Date().toISOString(),
     };
@@ -244,6 +247,10 @@ export class TaskStore {
     return {
       title: value.title,
       description: value.description,
+      translations: {
+        en: { title: value.title, description: value.description },
+        ar: { title: value.titleAr, description: value.descriptionAr },
+      },
       status: value.status,
       priority: value.priority,
       dueDate: value.dueDate,

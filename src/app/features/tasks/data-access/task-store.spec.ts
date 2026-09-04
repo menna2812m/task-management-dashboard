@@ -145,6 +145,8 @@ describe('TaskStore', () => {
       const pending = store.createTask({
         title: 'Onboarding',
         description: 'Welcome pack',
+        titleAr: 'تهيئة الموظف',
+        descriptionAr: 'حزمة الترحيب',
         status: 'todo',
         priority: 'low',
         dueDate: isoDateFromToday(3),
@@ -165,6 +167,8 @@ describe('TaskStore', () => {
     const formValue = {
       title: 'Write release notes',
       description: 'Summarise the changes',
+      titleAr: 'كتابة ملاحظات الإصدار',
+      descriptionAr: 'تلخيص التغييرات',
       status: 'todo' as const,
       priority: 'high' as const,
       dueDate: isoDateFromToday(4),
@@ -312,6 +316,8 @@ describe('TaskStore', () => {
     const formValue = {
       title: 'Write release notes',
       description: 'Summarise the changes',
+      titleAr: 'كتابة ملاحظات الإصدار',
+      descriptionAr: 'تلخيص التغييرات',
       status: 'todo' as const,
       priority: 'high' as const,
       dueDate: isoDateFromToday(4),
