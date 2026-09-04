@@ -1,8 +1,11 @@
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TaskStore } from '../../../features/tasks/data-access/task-store';
 import { TaskDialogService } from '../../../features/tasks/ui/task-form-dialog/task-dialog.service';
 import { CURRENT_USER } from '../../auth/current-user';
+import { TranslationService } from '../../i18n/translation.service';
 import { Icon } from '../../ui/icon/icon';
 
 interface NavItem {
@@ -23,6 +26,9 @@ interface NavItem {
 export class MainLayout {
   protected readonly taskStore = inject(TaskStore);
   protected readonly taskDialog = inject(TaskDialogService);
+  protected readonly translations = inject(TranslationService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly document = inject(DOCUMENT);
 
   protected readonly navItems: readonly NavItem[] = [
     { label: 'Dashboard', emoji: '📊', route: '/dashboard' },
@@ -37,5 +43,18 @@ export class MainLayout {
 
   protected onSearch(event: Event): void {
     this.taskStore.setSearchTerm((event.target as HTMLInputElement).value);
+    queueMicrotask(() => this.scrollToTaskResults());
+  }
+
+  protected showNotifications(): void {
+    this.snackBar.open(this.translations.translate('notificationsSoon'), undefined, {
+      duration: 3000,
+    });
+  }
+
+  private scrollToTaskResults(): void {
+    this.document
+      .querySelector<HTMLElement>('[data-task-results]')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
