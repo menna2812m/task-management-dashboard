@@ -32,6 +32,18 @@ npm run mock:api        # JSON Server on http://localhost:3000
 npm start               # Angular dev server on http://localhost:4200
 ```
 
+### Docker
+
+Build and run the production frontend and its mock API:
+
+```bash
+docker compose up --build
+```
+
+Open `http://localhost:8080`. Nginx serves the Angular application, handles client-side
+routing, and forwards `/api/*` requests to the JSON Server container. Stop the stack with
+`docker compose down`.
+
 Run the mock API and the dev server in two terminals. The app redirects `/` to `/dashboard`.
 
 ## Scripts
