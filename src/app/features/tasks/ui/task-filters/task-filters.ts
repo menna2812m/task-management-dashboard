@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, effect, input, output } from '@angu
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
 import { Assignee } from '../../models/task.models';
 import { TaskPriorityFilter, TaskStatusFilter } from '../../data-access/task-store';
 
 @Component({
   selector: 'app-task-filters',
-  imports: [ReactiveFormsModule, MatButtonModule],
+  imports: [ReactiveFormsModule, MatButtonModule, TranslatePipe],
   templateUrl: './task-filters.html',
   styleUrl: './task-filters.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -11,7 +11,7 @@
       class="task-control"
       [class.is-invalid]="form.controls.title.touched && form.controls.title.invalid"
     >
-      <label for="task-title">Title</label>
+      <label for="task-title">{{ 'title' | translate }}</label>
       <input
         id="task-title"
         class="app-input"
@@ -28,7 +28,7 @@
       class="task-control task-control-textarea"
       [class.is-invalid]="form.controls.description.touched && form.controls.description.invalid"
     >
-      <label for="task-description">Description</label>
+      <label for="task-description">{{ 'description' | translate }}</label>
       <textarea
         id="task-description"
         class="app-input"
@@ -42,20 +42,20 @@
 
     <div class="grid gap-5 sm:grid-cols-2">
       <div class="task-control task-control-select">
-        <label for="task-status">Status</label>
+        <label for="task-status">{{ 'status' | translate }}</label>
         <select id="task-status" class="app-input" formControlName="status">
-          <option value="todo">To do</option>
-          <option value="in_progress">In progress</option>
-          <option value="done">Done</option>
+          <option value="todo">{{ 'todo' | translate }}</option>
+          <option value="in_progress">{{ 'inProgress' | translate }}</option>
+          <option value="done">{{ 'done' | translate }}</option>
         </select>
       </div>
 
       <div class="task-control task-control-select">
-        <label for="task-priority">Priority</label>
+        <label for="task-priority">{{ 'priority' | translate }}</label>
         <select id="task-priority" class="app-input" formControlName="priority">
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
+          <option value="low">{{ 'low' | translate }}</option>
+          <option value="medium">{{ 'medium' | translate }}</option>
+          <option value="high">{{ 'high' | translate }}</option>
         </select>
       </div>
     </div>
@@ -65,7 +65,7 @@
         class="task-control"
         [class.is-invalid]="form.controls.dueDate.touched && form.controls.dueDate.invalid"
       >
-        <label for="task-due-date">Due date</label>
+        <label for="task-due-date">{{ 'dueDate' | translate }}</label>
         <input id="task-due-date" class="app-input" type="date" formControlName="dueDate" />
         @if (form.controls.dueDate.touched && form.controls.dueDate.invalid) {
           <p class="task-control-error">Due date is required.</p>
@@ -76,9 +76,9 @@
         class="task-control task-control-select"
         [class.is-invalid]="form.controls.assigneeId.touched && form.controls.assigneeId.invalid"
       >
-        <label for="task-assignee">Assignee</label>
+        <label for="task-assignee">{{ 'assignee' | translate }}</label>
         <select id="task-assignee" class="app-input" formControlName="assigneeId">
-          <option value="" disabled>Select an assignee</option>
+          <option value="" disabled>{{ 'selectAssignee' | translate }}</option>
           @for (assignee of data.assignees; track assignee.id) {
             <option [value]="assignee.id">{{ assignee.name }}</option>
           }
@@ -90,12 +90,12 @@
     </div>
 
     <fieldset formArrayName="tags" class="task-tags rounded-xl border border-slate-200 p-4">
-      <legend class="px-2 text-sm font-semibold text-slate-700">Tags</legend>
+      <legend class="px-2 text-sm font-semibold text-slate-700">{{ 'tags' | translate }}</legend>
 
       @for (tagControl of tags.controls; track tagControl; let index = $index) {
         <div class="task-tag-row">
           <div class="task-control" [class.is-invalid]="tagControl.touched && tagControl.invalid">
-            <label [for]="'task-tag-' + index">Tag {{ index + 1 }}</label>
+            <label [for]="'task-tag-' + index">{{ 'tags' | translate }} {{ index + 1 }}</label>
             <input
               [id]="'task-tag-' + index"
               class="app-input"
@@ -114,21 +114,23 @@
             [disabled]="tags.length === 1"
             (click)="removeTag(index)"
           >
-            Remove
+            {{ 'remove' | translate }}
           </button>
         </div>
       }
 
       <button mat-stroked-button type="button" class="task-tag-add" (click)="addTag()">
-        Add tag
+        {{ 'addTag' | translate }}
       </button>
     </fieldset>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end" class="task-dialog-actions">
-    <button mat-button type="button" class="task-dialog-cancel" mat-dialog-close>Cancel</button>
+    <button mat-button type="button" class="task-dialog-cancel" mat-dialog-close>
+      {{ 'cancel' | translate }}
+    </button>
     <button mat-flat-button type="submit" class="task-dialog-submit">
-      {{ data.task ? 'Save changes' : 'Create task' }}
+      {{ data.task ? ('saveChanges' | translate) : ('createTask' | translate) }}
     </button>
   </mat-dialog-actions>
 </form>

@@ -4,34 +4,34 @@
   class="task-filter-panel grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:grid-cols-2 xl:grid-cols-5"
 >
   <label class="filter-control">
-    <span>Search tasks</span>
+    <span>{{ 'search' | translate }}</span>
     <input class="app-input" type="search" formControlName="searchTerm" />
   </label>
 
   <label class="filter-control">
-    <span>Status</span>
+    <span>{{ 'status' | translate }}</span>
     <select class="app-input" formControlName="status">
-      <option value="all">All statuses</option>
-      <option value="todo">To do</option>
-      <option value="in_progress">In progress</option>
-      <option value="done">Done</option>
+      <option value="all">{{ 'allStatuses' | translate }}</option>
+      <option value="todo">{{ 'todo' | translate }}</option>
+      <option value="in_progress">{{ 'inProgress' | translate }}</option>
+      <option value="done">{{ 'done' | translate }}</option>
     </select>
   </label>
 
   <label class="filter-control">
-    <span>Priority</span>
+    <span>{{ 'priority' | translate }}</span>
     <select class="app-input" formControlName="priority">
-      <option value="all">All priorities</option>
-      <option value="low">Low</option>
-      <option value="medium">Medium</option>
-      <option value="high">High</option>
+      <option value="all">{{ 'allPriorities' | translate }}</option>
+      <option value="low">{{ 'low' | translate }}</option>
+      <option value="medium">{{ 'medium' | translate }}</option>
+      <option value="high">{{ 'high' | translate }}</option>
     </select>
   </label>
 
   <label class="filter-control">
-    <span>Assignee</span>
+    <span>{{ 'assignee' | translate }}</span>
     <select class="app-input" formControlName="assigneeId">
-      <option value="all">All assignees</option>
+      <option value="all">{{ 'allAssignees' | translate }}</option>
 
       @for (assignee of assignees(); track assignee.id) {
         <option [value]="assignee.id">{{ assignee.name }}</option>
@@ -45,6 +45,6 @@
     class="filter-clear self-center"
     (click)="resetFilters()"
   >
-    Clear filters
+    {{ 'clearFilters' | translate }}
   </button>
 </form>

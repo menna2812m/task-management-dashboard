@@ -66,6 +66,43 @@ body {
   height: 100%;
 }
 
+html[dir='rtl'] {
+  .fixed.inset-y-0.left-0 {
+    right: 0;
+    left: auto;
+  }
+
+  .fixed.inset-x-0.top-0 {
+    padding-right: 5rem;
+    padding-left: 1rem;
+  }
+
+  main.pt-14.pl-16 {
+    padding-right: 4rem;
+    padding-left: 0;
+  }
+
+  .app-input {
+    background-position:
+      1rem 50%,
+      1.3125rem 50%;
+    padding-right: 2.5rem;
+    padding-left: 0.75rem;
+  }
+
+  @media (min-width: 64rem) {
+    .fixed.inset-x-0.top-0 {
+      padding-right: 15rem;
+      padding-left: 1.5rem;
+    }
+
+    main.pt-14.pl-16 {
+      padding-right: 14rem;
+      padding-left: 0;
+    }
+  }
+}
+
 body {
   color-scheme: light;
   margin: 0;

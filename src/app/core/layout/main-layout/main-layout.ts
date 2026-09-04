@@ -5,6 +5,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TaskStore } from '../../../features/tasks/data-access/task-store';
 import { TaskDialogService } from '../../../features/tasks/ui/task-form-dialog/task-dialog.service';
 import { CURRENT_USER } from '../../auth/current-user';
+import { TranslationService } from '../../i18n/translation.service';
 import { Icon } from '../../ui/icon/icon';
 
 interface NavItem {
@@ -25,6 +26,7 @@ interface NavItem {
 export class MainLayout {
   protected readonly taskStore = inject(TaskStore);
   protected readonly taskDialog = inject(TaskDialogService);
+  protected readonly translations = inject(TranslationService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly document = inject(DOCUMENT);
 
@@ -45,7 +47,9 @@ export class MainLayout {
   }
 
   protected showNotifications(): void {
-    this.snackBar.open('Notifications are coming soon.', undefined, { duration: 3000 });
+    this.snackBar.open(this.translations.translate('notificationsSoon'), undefined, {
+      duration: 3000,
+    });
   }
 
   private scrollToTaskResults(): void {
