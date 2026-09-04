@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { HttpCacheService } from '../../../core/http/http-cache.service';
+import { TranslationService } from '../../../core/i18n/translation.service';
 import { NewTask, Task } from '../models/task.models';
 
 @Injectable({
@@ -11,12 +12,19 @@ import { NewTask, Task } from '../models/task.models';
 export class TaskApi {
   private readonly http = inject(HttpClient);
   private readonly cache = inject(HttpCacheService);
+  private readonly translations = inject(TranslationService);
   private readonly tasksUrl = `${environment.apiUrl}/tasks`;
 
   /** The task list, kept as a resource so callers get loading and error state for free. */
-  readonly tasks = httpResource<Task[]>(() => this.tasksUrl, {
-    defaultValue: [],
-  });
+  readonly tasks = httpResource<Task[]>(
+    () => {
+      this.translations.language();
+      return this.tasksUrl;
+    },
+    {
+      defaultValue: [],
+    },
+  );
 
   /** Re-fetches the list from the backend, bypassing any cached copy. */
   refresh(): void {

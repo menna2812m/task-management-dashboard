@@ -49,8 +49,10 @@ export class TaskStore {
   readonly isLoading = this.taskApi.tasks.isLoading;
   readonly error = this.taskApi.tasks.error;
 
-  /** True while a create, update or delete request is in flight. */
-  readonly isSaving = signal(false);
+  private readonly pendingMutations = signal(0);
+
+  /** True while at least one create, update or delete request is in flight. */
+  readonly isSaving = computed(() => this.pendingMutations() > 0);
 
   readonly filteredTasks = computed(() => {
     const searchTerm = this.searchTerm().trim().toLowerCase();
@@ -173,24 +175,25 @@ export class TaskStore {
     );
   }
 
-  /**
-   * Moves a card to another board column. Reuse the normal update path so completion
-   * timestamps, activity logging and cache invalidation stay consistent with form edits.
-   */
+  /** Moves a card without rebuilding form data or touching its localized content. */
   moveTask(task: Task, status: TaskStatus): Promise<Task> {
     if (task.status === status) {
       return Promise.resolve(task);
     }
 
-    return this.updateTask(task, {
-      title: task.title,
-      description: task.description,
+    const now = new Date().toISOString();
+    const updated: Task = {
+      ...task,
       status,
-      priority: task.priority,
-      dueDate: task.dueDate,
-      assigneeId: task.assignee.id,
-      tags: task.tags,
-    });
+      completedAt: this.completedAtFor(task, status, now),
+      updatedAt: now,
+    };
+    const becameDone = status === 'done' && task.status !== 'done';
+
+    return this.mutate(
+      () => this.taskApi.update(updated),
+      (saved) => this.activityFor(becameDone ? 'completed' : 'updated', saved),
+    );
   }
 
   /** Deletes a task and refreshes the list. */
@@ -210,7 +213,7 @@ export class TaskStore {
     request: () => Promise<T>,
     activity: (result: T) => NewActivity,
   ): Promise<T> {
-    this.isSaving.set(true);
+    this.pendingMutations.update((count) => count + 1);
 
     try {
       const result = await request();
@@ -219,7 +222,7 @@ export class TaskStore {
 
       return result;
     } finally {
-      this.isSaving.set(false);
+      this.pendingMutations.update((count) => count - 1);
     }
   }
 
@@ -228,6 +231,7 @@ export class TaskStore {
       type,
       taskId: task.id,
       taskTitle: task.title,
+      taskTranslations: task.translations,
       actor: CURRENT_USER,
       timestamp: new Date().toISOString(),
     };
@@ -244,6 +248,10 @@ export class TaskStore {
     return {
       title: value.title,
       description: value.description,
+      translations: {
+        en: { title: value.title, description: value.description },
+        ar: { title: value.titleAr, description: value.descriptionAr },
+      },
       status: value.status,
       priority: value.priority,
       dueDate: value.dueDate,

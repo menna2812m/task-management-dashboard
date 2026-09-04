@@ -9,6 +9,7 @@ import {
 import { TaskStore } from '../../data-access/task-store';
 import { Task, TaskDialogData, TaskFormValue } from '../../models/task.models';
 import type { TaskFormDialog } from './task-form-dialog';
+import { TranslationService } from '../../../../core/i18n/translation.service';
 
 type FormDialogRef = MatDialogRef<TaskFormDialog, TaskFormValue>;
 
@@ -24,6 +25,7 @@ export class TaskDialogService {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   private readonly taskStore = inject(TaskStore);
+  private readonly translations = inject(TranslationService);
 
   /** Opens the create form; saves when it closes with a value. */
   async openCreate(): Promise<FormDialogRef> {
@@ -31,7 +33,7 @@ export class TaskDialogService {
 
     ref.afterClosed().subscribe((value) => {
       if (value) {
-        void this.run(() => this.taskStore.createTask(value), 'Task created');
+        void this.run(() => this.taskStore.createTask(value), 'taskCreated');
       }
     });
 
@@ -44,7 +46,7 @@ export class TaskDialogService {
 
     ref.afterClosed().subscribe((value) => {
       if (value) {
-        void this.run(() => this.taskStore.updateTask(task, value), 'Task updated');
+        void this.run(() => this.taskStore.updateTask(task, value), 'taskUpdated');
       }
     });
 
@@ -54,9 +56,9 @@ export class TaskDialogService {
   /** Asks before deleting. Resolves true only when the task was deleted. */
   async confirmDelete(task: Task): Promise<boolean> {
     const data: ConfirmDialogData = {
-      title: 'Delete task?',
-      message: `"${task.title}" will be removed for everyone. This cannot be undone.`,
-      confirmLabel: 'Delete',
+      title: this.translations.translate('deleteTaskTitle'),
+      message: this.translations.translate('deleteTaskMessage').replace('{title}', task.title),
+      confirmLabel: this.translations.translate('delete'),
     };
     const confirmed = await firstValueFrom(
       this.dialog
@@ -68,11 +70,7 @@ export class TaskDialogService {
       return false;
     }
 
-    return this.run(
-      () => this.taskStore.deleteTask(task),
-      'Task deleted',
-      'Task could not be deleted. Try again.',
-    );
+    return this.run(() => this.taskStore.deleteTask(task), 'taskDeleted', 'taskDeleteError');
   }
 
   closeAll(): void {
@@ -85,6 +83,7 @@ export class TaskDialogService {
     return this.dialog.open<TaskFormDialog, TaskDialogData, TaskFormValue>(TaskFormDialog, {
       width: '720px',
       maxWidth: '95vw',
+      maxHeight: 'calc(100dvh - 2rem)',
       data: {
         task,
         assignees: this.taskStore.assignees(),
@@ -96,15 +95,21 @@ export class TaskDialogService {
   private async run(
     mutation: () => Promise<unknown>,
     successMessage: string,
-    failureMessage = 'Task could not be saved. Try again.',
+    failureMessage = 'taskSaveError',
   ): Promise<boolean> {
     try {
       await mutation();
-      this.snackBar.open(successMessage, undefined, { duration: 3000 });
+      this.snackBar.open(this.translations.translate(successMessage), undefined, {
+        duration: 3000,
+      });
 
       return true;
     } catch {
-      this.snackBar.open(failureMessage, 'Dismiss', { duration: 6000 });
+      this.snackBar.open(
+        this.translations.translate(failureMessage),
+        this.translations.translate('dismiss'),
+        { duration: 6000 },
+      );
 
       return false;
     }

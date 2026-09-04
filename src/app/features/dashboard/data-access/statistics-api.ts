@@ -1,6 +1,7 @@
 import { httpResource } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
+import { TranslationService } from '../../../core/i18n/translation.service';
 import { Statistic } from '../models/statistic.models';
 
 /**
@@ -24,8 +25,16 @@ function noTrend(
   providedIn: 'root',
 })
 export class StatisticsApi {
+  private readonly translations = inject(TranslationService);
+
   /** Summary card definitions and trends. Values are snapshots; counts come from the task store. */
-  readonly statistics = httpResource<Statistic[]>(() => `${environment.apiUrl}/statistics`, {
-    defaultValue: [],
-  });
+  readonly statistics = httpResource<Statistic[]>(
+    () => {
+      this.translations.language();
+      return `${environment.apiUrl}/statistics`;
+    },
+    {
+      defaultValue: [],
+    },
+  );
 }

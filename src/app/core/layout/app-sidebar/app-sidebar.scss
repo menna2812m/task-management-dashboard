@@ -6,8 +6,8 @@
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
   font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--color-slate-600);
+  font-weight: 400;
+  color: #212121;
   transition:
     background-color 120ms ease,
     color 120ms ease;
@@ -39,13 +39,11 @@
 
 .nav-link--disabled,
 .nav-link--disabled:hover {
+  cursor: default;
   background-color: transparent;
   color: var(--color-slate-400);
-  cursor: default;
 }
 
-// Header glyphs (logo clipboard, notification bell) are PNGs exported from the design
-// file, so they match Figma's emoji rendering on every platform.
 .glyph {
   display: block;
   flex-shrink: 0;

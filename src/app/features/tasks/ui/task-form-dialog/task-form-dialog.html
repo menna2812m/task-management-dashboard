@@ -1,97 +1,173 @@
-<h2 mat-dialog-title>
-  {{ data.task ? 'Edit task' : 'Create task' }}
+<h2 mat-dialog-title class="task-dialog-title">
+  {{ (data.task ? 'editTask' : 'createTask') | translate }}
+  <span class="task-dialog-subtitle">
+    {{ (data.task ? 'updateDetails' : 'addDetails') | translate }}
+  </span>
 </h2>
 
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <mat-dialog-content class="grid gap-2 sm:min-w-xl">
-    <mat-form-field appearance="outline">
-      <mat-label>Title</mat-label>
-      <input matInput formControlName="title" />
+  <mat-dialog-content class="task-form-content grid gap-5 sm:min-w-xl">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div
+        class="task-control"
+        [class.is-invalid]="form.controls.title.touched && form.controls.title.invalid"
+        dir="ltr"
+      >
+        <label for="task-title">{{ 'titleEn' | translate }}</label>
+        <input
+          id="task-title"
+          class="app-input"
+          type="text"
+          formControlName="title"
+          autocomplete="off"
+        />
+        @if (form.controls.title.touched && form.controls.title.invalid) {
+          <p class="task-control-error">{{ 'titleError' | translate }}</p>
+        }
+      </div>
 
-      @if (form.controls.title.touched && form.controls.title.invalid) {
-        <mat-error>Enter a title between 3 and 100 characters.</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Description</mat-label>
-      <textarea matInput formControlName="description" rows="4"></textarea>
-
-      @if (form.controls.description.touched && form.controls.description.invalid) {
-        <mat-error>Description is required.</mat-error>
-      }
-    </mat-form-field>
-
-    <div class="grid gap-4 sm:grid-cols-2">
-      <mat-form-field appearance="outline">
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status">
-          <mat-option value="todo">To do</mat-option>
-          <mat-option value="in_progress">In progress</mat-option>
-          <mat-option value="done">Done</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Priority</mat-label>
-        <mat-select formControlName="priority">
-          <mat-option value="low">Low</mat-option>
-          <mat-option value="medium">Medium</mat-option>
-          <mat-option value="high">High</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div
+        class="task-control"
+        [class.is-invalid]="form.controls.titleAr.touched && form.controls.titleAr.invalid"
+        dir="rtl"
+      >
+        <label for="task-title-ar">{{ 'titleAr' | translate }}</label>
+        <input id="task-title-ar" class="app-input" type="text" formControlName="titleAr" />
+        @if (form.controls.titleAr.touched && form.controls.titleAr.invalid) {
+          <p class="task-control-error">{{ 'titleArError' | translate }}</p>
+        }
+      </div>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2">
-      <mat-form-field appearance="outline">
-        <mat-label>Due date</mat-label>
-        <input matInput type="date" formControlName="dueDate" />
-        <mat-error>Due date is required.</mat-error>
-      </mat-form-field>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div
+        class="task-control task-control-textarea"
+        [class.is-invalid]="form.controls.description.touched && form.controls.description.invalid"
+        dir="ltr"
+      >
+        <label for="task-description">{{ 'descriptionEn' | translate }}</label>
+        <textarea
+          id="task-description"
+          class="app-input"
+          formControlName="description"
+          rows="3"
+        ></textarea>
+        @if (form.controls.description.touched && form.controls.description.invalid) {
+          <p class="task-control-error">{{ 'descriptionError' | translate }}</p>
+        }
+      </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Assignee</mat-label>
-        <mat-select formControlName="assigneeId">
+      <div
+        class="task-control task-control-textarea"
+        [class.is-invalid]="
+          form.controls.descriptionAr.touched && form.controls.descriptionAr.invalid
+        "
+        dir="rtl"
+      >
+        <label for="task-description-ar">{{ 'descriptionAr' | translate }}</label>
+        <textarea
+          id="task-description-ar"
+          class="app-input"
+          formControlName="descriptionAr"
+          rows="3"
+        ></textarea>
+        @if (form.controls.descriptionAr.touched && form.controls.descriptionAr.invalid) {
+          <p class="task-control-error">{{ 'descriptionArError' | translate }}</p>
+        }
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div class="task-control task-control-select">
+        <label for="task-status">{{ 'status' | translate }}</label>
+        <select id="task-status" class="app-input" formControlName="status">
+          <option value="todo">{{ 'todo' | translate }}</option>
+          <option value="in_progress">{{ 'inProgress' | translate }}</option>
+          <option value="done">{{ 'done' | translate }}</option>
+        </select>
+      </div>
+
+      <div class="task-control task-control-select">
+        <label for="task-priority">{{ 'priority' | translate }}</label>
+        <select id="task-priority" class="app-input" formControlName="priority">
+          <option value="low">{{ 'low' | translate }}</option>
+          <option value="medium">{{ 'medium' | translate }}</option>
+          <option value="high">{{ 'high' | translate }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div
+        class="task-control"
+        [class.is-invalid]="form.controls.dueDate.touched && form.controls.dueDate.invalid"
+      >
+        <label for="task-due-date">{{ 'dueDate' | translate }}</label>
+        <input id="task-due-date" class="app-input" type="date" formControlName="dueDate" />
+        @if (form.controls.dueDate.touched && form.controls.dueDate.invalid) {
+          <p class="task-control-error">{{ 'dueDateError' | translate }}</p>
+        }
+      </div>
+
+      <div
+        class="task-control task-control-select"
+        [class.is-invalid]="form.controls.assigneeId.touched && form.controls.assigneeId.invalid"
+      >
+        <label for="task-assignee">{{ 'assignee' | translate }}</label>
+        <select id="task-assignee" class="app-input" formControlName="assigneeId">
+          <option value="" disabled>{{ 'selectAssignee' | translate }}</option>
           @for (assignee of data.assignees; track assignee.id) {
-            <mat-option [value]="assignee.id">
-              {{ assignee.name }}
-            </mat-option>
+            <option [value]="assignee.id">{{ assignee.name }}</option>
           }
-        </mat-select>
-        <mat-error>Assignee is required.</mat-error>
-      </mat-form-field>
+        </select>
+        @if (form.controls.assigneeId.touched && form.controls.assigneeId.invalid) {
+          <p class="task-control-error">{{ 'assigneeError' | translate }}</p>
+        }
+      </div>
     </div>
 
-    <fieldset formArrayName="tags" class="rounded-lg border border-slate-200 p-4">
-      <legend class="px-2 font-medium text-slate-700">Tags</legend>
+    <fieldset formArrayName="tags" class="task-tags rounded-xl border border-slate-200 p-4">
+      <legend class="px-2 text-sm font-semibold text-slate-700">{{ 'tags' | translate }}</legend>
 
       @for (tagControl of tags.controls; track tagControl; let index = $index) {
-        <div class="flex items-start gap-2">
-          <mat-form-field appearance="outline" class="flex-1">
-            <mat-label>Tag {{ index + 1 }}</mat-label>
-            <input matInput [formControlName]="index" />
-            <mat-error>Tag cannot be empty.</mat-error>
-          </mat-form-field>
+        <div class="task-tag-row">
+          <div class="task-control" [class.is-invalid]="tagControl.touched && tagControl.invalid">
+            <label [for]="'task-tag-' + index">{{ 'tags' | translate }} {{ index + 1 }}</label>
+            <input
+              [id]="'task-tag-' + index"
+              class="app-input"
+              type="text"
+              [formControlName]="index"
+            />
+            @if (tagControl.touched && tagControl.invalid) {
+              <p class="task-control-error">{{ 'tagError' | translate }}</p>
+            }
+          </div>
 
           <button
             mat-button
+            class="task-tag-remove"
             type="button"
             [disabled]="tags.length === 1"
             (click)="removeTag(index)"
           >
-            Remove
+            {{ 'remove' | translate }}
           </button>
         </div>
       }
 
-      <button mat-stroked-button type="button" (click)="addTag()">Add tag</button>
+      <button mat-stroked-button type="button" class="task-tag-add" (click)="addTag()">
+        {{ 'addTag' | translate }}
+      </button>
     </fieldset>
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-button type="button" mat-dialog-close>Cancel</button>
-    <button mat-flat-button type="submit">
-      {{ data.task ? 'Save changes' : 'Create task' }}
+  <mat-dialog-actions align="end" class="task-dialog-actions">
+    <button mat-button type="button" class="task-dialog-cancel" mat-dialog-close>
+      {{ 'cancel' | translate }}
+    </button>
+    <button mat-flat-button type="submit" class="task-dialog-submit">
+      {{ data.task ? ('saveChanges' | translate) : ('createTask' | translate) }}
     </button>
   </mat-dialog-actions>
 </form>

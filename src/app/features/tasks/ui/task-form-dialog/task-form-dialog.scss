@@ -1,0 +1,156 @@
+:host {
+  display: block;
+}
+
+.task-dialog-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.5rem 1.75rem 0.75rem;
+  color: var(--color-grey-13);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.task-dialog-subtitle {
+  color: var(--color-slate-500);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.task-form-content {
+  display: grid;
+  gap: 1.5rem;
+  padding: 0.75rem 1.75rem 1rem;
+  padding-top: 0.5rem;
+}
+
+.task-control {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 8px;
+
+  label {
+    color: #475569;
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  input,
+  select,
+  textarea {
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.625rem;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
+    color: var(--color-grey-13);
+    font: inherit;
+    line-height: 1.5;
+    outline: none;
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease;
+
+    &:hover {
+      border-color: #94a3b8;
+    }
+
+    &:focus {
+      border-color: var(--color-brand-600);
+      box-shadow: 0 0 0 3px rgb(25 118 210 / 14%);
+    }
+  }
+
+  input,
+  select {
+    min-height: 2.75rem;
+    padding: 0.625rem 0.75rem;
+  }
+
+  textarea {
+    min-height: 6.75rem;
+    padding: 0.625rem 0.75rem;
+    resize: vertical;
+  }
+
+  &.is-invalid {
+    label,
+    .task-control-error {
+      color: #dc2626;
+    }
+
+    input,
+    select,
+    textarea {
+      border-color: #ef4444;
+    }
+  }
+}
+
+.task-control-error {
+  margin: 0;
+  color: #dc2626;
+  font-size: 0.75rem;
+}
+
+.task-tags {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+}
+
+.task-tag-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+
+  .task-control {
+    flex: 1;
+  }
+}
+
+.task-tag-remove {
+  margin-top: 0.25rem;
+  color: var(--color-slate-500);
+}
+
+.task-tag-add {
+  border-radius: 0.625rem;
+  border-color: var(--color-brand-300);
+  color: var(--color-brand-600);
+}
+
+.task-dialog-actions {
+  gap: 0.5rem;
+  padding: 1rem 1.75rem 1.5rem;
+}
+
+.task-dialog-cancel {
+  color: var(--color-slate-600);
+}
+
+.task-dialog-submit {
+  min-width: 8.5rem;
+  border-radius: 0.625rem;
+  box-shadow: 0 4px 10px rgb(25 118 210 / 22%);
+}
+
+@media (max-width: 40rem) {
+  .task-form-content {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
+  .task-tag-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .task-tag-remove {
+    align-self: flex-start;
+    margin-top: 0;
+  }
+}

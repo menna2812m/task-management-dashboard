@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 export interface ConfirmDialogData {
   title: string;
@@ -12,14 +13,16 @@ export interface ConfirmDialogData {
 /** Generic yes/no dialog. Closes with `true` when confirmed and `false` when cancelled. */
 @Component({
   selector: 'app-confirm-dialog',
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatDialogModule, MatButtonModule, TranslatePipe],
   template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>
       <p class="m-0 text-sm text-slate-600">{{ data.message }}</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button type="button" [mat-dialog-close]="false">Cancel</button>
+      <button mat-button type="button" [mat-dialog-close]="false">
+        {{ 'cancel' | translate }}
+      </button>
       <button
         mat-flat-button
         type="button"
